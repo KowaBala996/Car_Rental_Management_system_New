@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Dashboard Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures body takes full height */
+            background-color: #f9f9f9;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #ffcc00; /* Yellow Background */
+            color: #333;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed; /* Fix the sidebar */
+            height: 100%;
+            overflow-y: auto; /* Enable scrolling */
+            transform: translateX(-100%); /* Start off-screen */
+            animation: slideIn 0.5s forwards; /* Animation to slide in */
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s; /* Fade-in effect */
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .sidebar img {
+            width: 80%;
+            height: auto;
+            margin-bottom: 20px;
+            transition: transform 0.3s; /* Smooth image hover effect */
+        }
+        .sidebar img:hover {
+            transform: scale(1.1); /* Zoom effect on hover */
+        }
+        .sidebar ul {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0; /* Remove padding */
+        }
+        .sidebar a {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            color: #333;
+            text-decoration: none;
+            display: flex; /* Flex display for icon alignment */
+            align-items: center; /* Center the icons and text vertically */
+            padding: 10px 0;
+            text-align: left; /* Align text to the left */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth hover effect */
+        }
+        .sidebar a:hover {
+            background-color: #fddf37; /* Darker Yellow on Hover */
+            transform: translateX(5px); /* Slide effect on hover */
+        }
+        .logout-button {
+            background-color: rgb(250, 1, 1); /* Red background for logout */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            display: block; /* Make it a block element */
+            margin-top: 20px; /* Space above the button */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth hover effect */
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+        .logout-button:hover {
+            background-color: darkred; /* Darker red on hover */
+            transform: scale(1.05); /* Scale effect on hover */
+        }
+        .content {
+            flex-grow: 1; /* Allow content to grow and fill available space */
+            padding: 20px;
+            margin-left: 250px; /* Margin for fixed sidebar */
+            overflow-y: auto; /* Enable scrolling */
+            opacity: 0; /* Start invisible for fade-in effect */
+            animation: fadeInContent 0.5s forwards; /* Fade-in effect for content */
+        }
+        @keyframes fadeInContent {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .user-details, .booking-details {
+            margin-bottom: 20px;
+            margin-left: 70px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            text-align: left; /* Align user details to left */
+            transition: transform 0.3s; /* Smooth hover effect */
+        }
+        .user-details:hover, .booking-details:hover {
+            transform: scale(1.02); /* Scale effect on hover */
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center; /* Center-align headings */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            width: 100%;
+        }
+
+/* User Name Styles */
+#user-name {
+    font-weight: bold; /* Make text bold */
+    font-size: 24px; /* Increase font size for emphasis */
+    opacity: 0; /* Start invisible for fade-in effect */
+    animation: fadeInText 2s forwards; /* Animation to fade in over 2 seconds */
+    text-align: center; /* Center-align the text */
+    margin-bottom: 20px; /* Space below the text */
+}
+
+@keyframes fadeInText {
+    from {
+        opacity: 0; /* Start fully transparent */
+        transform: translateX(100%); /* Start off-screen to the right */
+    }
+    to {
+        opacity: 1; /* End fully opaque */
+        transform: translateX(0); /* End at normal position */
+    }
+}
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative; /* Sidebar will not be fixed */
+                width: 100%;
+                height: auto; /* Allow content to define height */
+                animation: none; /* Disable animation on smaller screens */
+            }
+            .content {
+                margin-left: 0; /* No margin for smaller screens */
+                padding: 10px; /* Less padding */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .sidebar img {
+                width: 100%; /* Full width logo */
+            }
+            th, td {
+                font-size: 12px; /* Smaller font size for tables */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="../asset/downloadlogo.png" alt="logo">
+        <h2>Customer Dashboard</h2>
+        <ul>
+            <li><a href="../Landing_Page/index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="../AboutUs/about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+            <li><a href="../Car_Categories/get-car.html"><i class="fas fa-car"></i> Get Car</a></li>
+            <li><a href="../Contact_us/contact.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+        </ul>
+        <!-- Updated Logout Button with ID -->
+        <a href="#" id="logout-button" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="content">
+        <h1>Welcome to Your Dashboard</h1>
+        <p id="user-name"></p>
+        <div id="user-details-container"></div>
+        <div id="booking-details-container" class="booking-details">
+            <h2>Your Booking Details</h2>
+            <table class="booking-history-table">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Customer Name</th>
+                        <th>Car Model</th>
+                        <th>Booking Date</th>
+                        <th>Rental Start Date</th>
+                        <th>Rental End Date</th>
+                        <th>Advance Payment</th>
+                        <th>Payment Status</th>
+                        <th>Booking Status</th>
+                    </tr>
+                </thead>
+                <tbody id="booking-history">
+                    <!-- Booking rows will be dynamically injected here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 MileStone 2 Car Rental Services. All Rights Reserved.
+    </footer>
+
+    <script src="customerDashboard.js"></script>
+   
+</body>
+</html>
