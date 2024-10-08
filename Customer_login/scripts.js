@@ -3,22 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginInfo = document.querySelector(".login-info");
     const loginForm = document.querySelector(".login-form");
     const registerLink = document.getElementById("registerLink");
-    const logoutButton = document.getElementById('logoutButton');
-
-
-    logoutButton.addEventListener('click', function (event) {
-        event.preventDefault();
-        const loginBtn = document.getElementById('loginbtn');
-        const loginBtn2 = JSON.parse(localStorage.getItem('loggedUser')) || [];
-
-
-        localStorage.removeItem('loggedUser');
-
-        window.location.href = '../Landing_Page/index.html';
-        if (loginBtn2) {
-            loginBtn.style.display = "none"
-        }
-    });
+    
 
     closeButton.addEventListener("click", () => {
         loginInfo.style.display = "none";
@@ -54,13 +39,9 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Debugging log for NIC and password
-        console.log("Attempting login with NIC:", nic, "and encrypted password:", password);
-
         // Check for a matching customer with the provided NIC and password
         let customer = customers.find(c => c.customerNicnumber === nic && c.password === password);
 
-        // If the customer is found, proceed to login
         if (customer) {
             document.getElementById('demo1').innerHTML = "Login successful!";
             document.getElementById('logincontinue').style.display = "none";
@@ -68,15 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const loggedUser = { "customerNicnumber": customer.customerNicnumber, "password": customer.password };
             localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
-            if (loginBtn2) {
-                loginBtn.style.display = "none"
-            }
 
-            const userProfileData = JSON.parse(localStorage.getItem('userProfileData')) || [];
-            let uProfileData = userProfileData.find(p => p.customerNicnumber === loggedUser.customerNicnumber);
-
-
-
+            
             // Redirect based on verification status and carId presence
             if (!carId) {
                 window.location.href = `../Landing_Page/index.html`;
@@ -88,8 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         } else {
-            // Log the failure for debugging
-            console.log("Login failed for NIC:", nic, "with encrypted password:", password);
             document.getElementById('demo1').innerHTML = "Incorrect NIC or password.";
             document.getElementById('logincontinue').style.display = "none";
             document.getElementById('deleteX').style.display = "none";
