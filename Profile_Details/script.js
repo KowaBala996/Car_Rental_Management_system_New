@@ -229,4 +229,19 @@ document.addEventListener("DOMContentLoaded", function () {
     function generateUniqueId() {
         return 'id-' + Math.random().toString(36).substr(2, 16);
     }
+    document.addEventListener("DOMContentLoaded", function () {
+        const logoutButton = document.getElementById('logoutButton');
+    
+        // Logout function to clear loggedUser from localStorage and redirect
+        logoutButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default anchor behavior
+    
+            // Remove loggedUser from localStorage
+            localStorage.removeItem('loggedUser');
+    
+            // Redirect to the login page after logout
+            window.location.href = '../Customer_login/login.html';
+        });
+    });
+    
 });

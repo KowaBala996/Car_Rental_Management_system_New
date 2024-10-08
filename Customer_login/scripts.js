@@ -3,18 +3,31 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginInfo = document.querySelector(".login-info");
     const loginForm = document.querySelector(".login-form");
     const registerLink = document.getElementById("registerLink");
+    const logoutButton = document.getElementById('logoutButton');
 
-    // Close login information display
+
+    logoutButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        const loginBtn = document.getElementById('loginbtn');
+        const loginBtn2 = JSON.parse(localStorage.getItem('loggedUser')) || [];
+
+
+        localStorage.removeItem('loggedUser');
+
+        window.location.href = '../Landing_Page/index.html';
+        if (loginBtn2) {
+            loginBtn.style.display = "none"
+        }
+    });
+
     closeButton.addEventListener("click", () => {
         loginInfo.style.display = "none";
     });
 
-    // Function to encrypt the password
     function encryption(password) {
         return btoa(password); // Base64 encoding for demonstration; use a stronger method for production
     }
 
-    // Helper function to get query parameters from the URL
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
@@ -29,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Login form submission event listener
     loginForm.addEventListener("submit", (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         const customers = JSON.parse(localStorage.getItem('userProfileData')) || [];
 
         const nic = document.getElementById("nic").value.trim();
@@ -55,9 +68,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const loggedUser = { "customerNicnumber": customer.customerNicnumber, "password": customer.password };
             localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
+            if (loginBtn2) {
+                loginBtn.style.display = "none"
+            }
 
             const userProfileData = JSON.parse(localStorage.getItem('userProfileData')) || [];
             let uProfileData = userProfileData.find(p => p.customerNicnumber === loggedUser.customerNicnumber);
+
+
 
             // Redirect based on verification status and carId presence
             if (!carId) {

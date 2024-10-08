@@ -1,4 +1,18 @@
-// Function to get query parameters from the URL
+document.addEventListener("DOMContentLoaded", function () {
+    const logoutButton = document.getElementById('logoutButton');
+
+    // Logout function to clear loggedUser from localStorage and redirect to login page
+    logoutButton.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default link behavior
+
+        // Remove loggedUser from localStorage
+        localStorage.removeItem('loggedUser');
+
+        // Redirect to login page after logging out
+        window.location.href = '../Customer_login/login.html';
+    });
+});
+
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -45,7 +59,7 @@ function displayBookingDetails(car, customer) {
             <p><strong>Email:</strong> <a href="mailto:${customer.customerEmail}">${customer.customerEmail}</a></p>
             <p><strong>Phone:</strong> <a href="tel:${customer.customerPhone}">${customer.customerPhone}</a></p>
             
-            <button id="registerButton">Advanced Payment</button>
+            <button id="registerButton">Booking Payment</button>
         </div>
     `;
 
@@ -53,7 +67,7 @@ function displayBookingDetails(car, customer) {
 
     // Event listener for the advanced payment button
     const registerButton = document.getElementById('registerButton');
-    registerButton.addEventListener('click', function() {
+    registerButton.addEventListener('click', function () {
         window.location.href = `../Customer_payment/Cus_payment.html?carid=${rentalCarId}&customerid=${renterId}`; // Redirect to the payment page
     });
 }

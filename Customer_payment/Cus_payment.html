@@ -26,8 +26,8 @@
             <div class="user-dropdown">
                 User ▼
                 <div class="user-dropdown-content">
-                    <a href="">Profile</a>
-                    <a href="../Customer_login/login.html">Logout</a>
+                    <a href="#">Profile</a>
+                    <a href="#" id="logoutButton">Logout</a> <!-- Updated Logout link with an ID -->
                 </div>
             </div>
         </div>
@@ -53,18 +53,18 @@
                     <fieldset>
                         <legend>Payment Information</legend>
 
-                        <label for="payment-id">Recipt Number</label>
-                        <input type="number" id="payment-id" name="payment-id" required>
+                        <label for="payment-ReciptNumber">Recipt Number</label>
+                        <input type="number" id="payment-ReciptNumber" name="payment-ReciptNumber" required>
 
                         <label for="payment-date"> Payment Date</label>
                         <input type="date" id="payment-date" name="payment-date" required>
 
                         <label for="payment-amount"> Booking Payment </label>
-                        <input type="number" id="payment-amount" name="payment-amount" step="1000" placeholder="Advance payment is Rs.1000 only" required>
+                        <input type="number" id="payment-amount" name="payment-amount" step="1000"
+                            placeholder="Advance payment is Rs.1000 only" required>
 
                         <label for="payment-method">Payment Method</label>
-                        <input type="text" id="payment-method" name="payment-method"
-                             required>
+                        <input type="text" id="payment-method" name="payment-method" required>
 
                         <label for="payment-status">Payment status Message (max 20 words):</label>
                         <input type="text" id="payment-status" name="payment-status" required>
@@ -114,92 +114,95 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-    // Function to get query parameter from the URL
-    function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-    }
 
-    const carid = getQueryParam('carid'); // Extract car ID from URL
-    const customerid = getQueryParam('customerid'); // Extract customer ID from URL
 
-    // Function to display car details based on the car ID
-    function displayCarDetailsById(carId) {
-        const carDetailsJSON = localStorage.getItem('bookingCar'); // Fetch from local storage
-        const carDetails = JSON.parse(carDetailsJSON) || [];
+            const logoutButton = document.getElementById('logoutButton');
 
-        // Find the car detail that matches the carId
-        const carDetail = carDetails.find(car => car.carId === carid);
+            // Logout function to clear loggedUser from localStorage and redirect to login page
+            logoutButton.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default link behavior
 
-        if (carDetail) {
-            const carDetailsHTML = `
-                <p><strong>Price per Hour:</strong> Rs.${carDetail.hourlyRate}</p>
-                <p><strong>Total Hours:</strong> ${carDetail.totalHours}</p>
-                <p><strong>Total Price:</strong> Rs.${carDetail.totalPrice}</p>
-            `;
+                // Remove loggedUser from localStorage
+                localStorage.removeItem('loggedUser');
 
-            document.getElementById('car-details-container').innerHTML = carDetailsHTML;
+                // Redirect to login page after logging out
+                window.location.href = '../Customer_login/login.html';
+            });
 
-            // Save the selected car details for payment processing
-            localStorage.setItem('bookingCarPayment', JSON.stringify(carDetail));
-        } else {
-            document.getElementById('car-details-container').innerHTML = '<p>No car details available for this ID.</p>';
-        }
-    }
 
-    displayCarDetailsById(carid); // Display car details for the selected car
 
-    // Handle form submission for payment
-    document.getElementById('payment-form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent default form submission
+            // Function to get query parameters from the URL
+            function getQueryParam(param) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
 
-        // Retrieve form data
-        const paymentId = document.getElementById('payment-id').value;
-        const paymentDate = document.getElementById('payment-date').value;
-        const paymentAmount = document.getElementById('payment-amount').value;
-        const paymentMethod = document.getElementById('payment-method').value;
-        const paymentStatus = document.getElementById('payment-status').value;
+            const carid = getQueryParam('carid');
+            const customerid = getQueryParam('customerid');
 
-        // Retrieve last car details from local storage
-        const lastCarDetail = JSON.parse(localStorage.getItem('bookingCarPayment')) || {};
+            // Function to display car details by car ID
+            function displayCarDetailsById(carId) {
+                const carDetails = JSON.parse(localStorage.getItem('bookingCar')) || [];
 
-        // Create a payment object with car and customer details
-        const payment = {
-            paymentId: paymentId,
-            paymentDate: paymentDate,
-            paymentAmount: parseFloat(paymentAmount),
-            paymentMethod: paymentMethod,
-            paymentStatus: paymentStatus,
-            rentalCarId: lastCarDetail.carId || '',
-            startDate: lastCarDetail.bookingStartDate || '',
-            endDate: lastCarDetail.bookingEndDate || '',
-            carModel: lastCarDetail.model || '',
-            customerId: customerid,
-            totalPrice: lastCarDetail.totalPrice || 0
-        };
+                const carDetail = carDetails.find(car => car.carId === carid);
 
-        // Retrieve existing payments from local storage
-        let payments = JSON.parse(localStorage.getItem('bookingRequest')) || [];
+                if (carDetail) {
+                    const carDetailsHTML = `
+                        <p><strong>Price per Hour:</strong> Rs.${carDetail.hourlyRate}</p>
+                        <p><strong>Total Hours:</strong> ${carDetail.totalHours}</p>
+                        <p><strong>Total Price:</strong> Rs.${carDetail.totalPrice}</p>
+                    `;
+                    document.getElementById('car-details-container').innerHTML = carDetailsHTML;
+                } else {
+                    document.getElementById('car-details-container').innerHTML = '<p>No car details available for this ID.</p>';
+                }
+            }
 
-        // Check if there is an existing payment for the same car and customer
-        let isPayment = payments.find(p => p.rentalCarId === lastCarDetail.carId && p.customerId === customerid);
+            displayCarDetailsById(carid);
 
-        if (isPayment) {
-            alert("You have already requested the same car.");
-        } else {
-            // Add the new payment to the array
-            payments.push(payment);
+            // Event listener for the payment form submission
+            document.getElementById('payment-form').addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent form from submitting normally
 
-            // Save the updated array back to local storage
-            localStorage.setItem('bookingRequest', JSON.stringify(payments));
+                const payment_ReciptNumber = document.getElementById('payment-ReciptNumber').value;
+                const paymentDate = document.getElementById('payment-date').value;
+                const bookingAmount = document.getElementById('payment-amount').value;
+                const paymentMethod = document.getElementById('payment-method').value;
+                const paymentStatus = document.getElementById('payment-status').value;
 
-            // Show a confirmation message
-            alert('Request sent successfully!');
-        }
-    });
-});
+                // Generate unique payment ID using current timestamp
+                const paymentId = 'PAY_' + Math.floor(Math.random() * 1000);
 
+
+                const payment = {
+                    paymentId: paymentId,
+                    payment_ReciptNumber: payment_ReciptNumber,
+                    paymentDate: paymentDate,
+                    bookingAmount: parseFloat(bookingAmount),
+                    paymentMethod: paymentMethod,
+                    paymentStatus: paymentStatus,
+                    rentalCarId: carid || '',
+                    customerId: customerid,
+                };
+
+                // Fetch existing payments or initialize an empty array
+                let payments = JSON.parse(localStorage.getItem('bookingCarPayment')) || [];
+
+                // Check if payment for the same car and customer already exists
+                let isPayment = payments.find(p => p.rentalCarId === carid && p.customerId === customerid);
+
+                if (isPayment) {
+                    alert("You have already requested the same car.");
+                } else {
+                    // Add the new payment
+                    payments.push(payment);
+                    localStorage.setItem('bookingCarPayment', JSON.stringify(payments));
+                    alert('Request sent successfully!');
+                }
+            });
+        });
     </script>
+
 
 
 </body>

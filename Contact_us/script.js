@@ -1,6 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
     const contactForm = document.getElementById('contactForm');
 
+    const logoutButton = document.getElementById('logoutButton');
+
+    // Logout function to clear loggedUser from localStorage and redirect to login page
+    logoutButton.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default link behavior
+
+        // Remove loggedUser from localStorage
+        localStorage.removeItem('loggedUser');
+
+        // Redirect to login page after logging out
+        window.location.href = '../Customer_login/login.html';
+    });
+
+
+
     // Retrieve existing form data array from localStorage, or initialize it as an empty array
     let formDataArray = JSON.parse(localStorage.getItem('formDataArray')) || [];
 

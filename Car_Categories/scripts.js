@@ -215,4 +215,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('start-date').setAttribute('min', today);
     document.getElementById('end-date').setAttribute('min', today);
+    document.addEventListener("DOMContentLoaded", function () {
+        const logoutButton = document.getElementById('logoutButton');
+
+        // Logout function to clear loggedUser from localStorage and redirect to login page
+        logoutButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            // Remove loggedUser from localStorage
+            localStorage.removeItem('loggedUser');
+
+            // Redirect to login page after logging out
+            window.location.href = '../Customer_login/login.html';
+        });
+    });
+
 });

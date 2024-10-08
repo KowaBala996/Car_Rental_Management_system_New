@@ -22,10 +22,19 @@ function prevSlide() {
 document.querySelector('.next').addEventListener('click', nextSlide);
 document.querySelector('.prev').addEventListener('click', prevSlide);
 
-// Initialize carousel
 showSlide(currentSlide);
 
-// Auto-slide every 5 seconds
 setInterval(nextSlide, 5000);
 
+document.addEventListener("DOMContentLoaded", function () {
+    const logoutButton = document.getElementById('logoutButton');
+
+    logoutButton.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        localStorage.removeItem('loggedUser');
+
+        window.location.href = '../Customer_login/login.html';
+    });
+});
 
