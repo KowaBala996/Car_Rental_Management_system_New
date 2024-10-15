@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("proof-number").value = currentProfile.proofNumber || "";
 
                 const verificationStatusSpan = document.querySelector(".verification-status .status");
-                verificationStatusSpan.textContent = currentProfile.profileStatus || "Unknown";
+                verificationStatusSpan.textContent = currentProfile.profileStatus || "Pending";
 
                 // Set fields as read-only
                 document.getElementById("name").readOnly = true;

@@ -9,43 +9,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const loggedUser = JSON.parse(localStorage.getItem('loggedUser')) || {};
 
     // Display user's name or NIC number
-    if (loggedUser.nic) {
-        userNameDisplay.textContent = `You loged in with NIC Number ${loggedUser.nic}!`;
-    } else if (userRequests.length > 0) {
-        userNameDisplay.textContent = `You loged in with NIC Number ${userRequests[0].name}!`;
+    const loggedUserData = userRequests.find(user => user.customerNicnumber === loggedUser.customerNicnumber);
+    if (loggedUserData) {
+        userNameDisplay.textContent = `You logged in as ${loggedUserData.customerName}!`;
+    } else {
+        userNameDisplay.textContent = `You logged in with NIC Number ${loggedUser.customerNicnumber}!`;
     }
-    
+
     // Make the user name visible with fade-in effect
     userNameDisplay.style.opacity = 1;
 
     // Populate user details on the dashboard
     function populateUserDetails() {
         userDetailsContainer.innerHTML = ''; // Clear previous content
-        userRequests.forEach(user => {
+        if (loggedUserData) {
             const userDiv = document.createElement('div');
             userDiv.classList.add('user-details');
             userDiv.innerHTML = `
-                <h2>${user.name}</h2>
-                <p><strong>Email:</strong> ${user.email}</p>
-                <p><strong>Phone:</strong> ${user.phone}</p>
-                <p><strong>Address:</strong> ${user.address}</p>
-                <p><strong>License Number:</strong> ${user.licenseNumber}</p>
-                <p><strong>Proof Type:</strong> ${user.proofType}</p>
-                <p><strong>Postal Code:</strong> ${user.postalCode}</p>
-                <p><strong>Status:</strong> ${user.status}</p>
-                <div>
-                    <strong>License Images:</strong><br>
-                    <img src="${user.licenseFrontImage}" alt="License Front" style="width:100px;height:auto;margin-right:10px;">
-                    <img src="${user.licenseBackImage}" alt="License Back" style="width:100px;height:auto;">
-                </div>
+                <h2>${loggedUserData.customerName}</h2>
+                <p><strong>Email:</strong> ${loggedUserData.customerEmail}</p>
+                <p><strong>Phone:</strong> ${loggedUserData.customerPhone}</p>
+                <p><strong>Address:</strong> ${loggedUserData.customerAddress || "N/A"}</p>
+                <p><strong>License Number:</strong> ${loggedUserData.licenseNumber}</p>
+                <p><strong>Proof Type:</strong> ${loggedUserData.proofType}</p>
+                <p><strong>Postal Code:</strong> ${loggedUserData.postalCode}</p>
+                <p><strong>Profile Status:</strong> ${loggedUserData.profileStatus}</p>
+
+                
             `;
             userDetailsContainer.appendChild(userDiv);
-        });
+        }
     }
 
     // Fetch booking data from local storage and render it in the table
     function renderBookings() {
-        const bookings = JSON.parse(localStorage.getItem('bookingData')) || [];
+        const bookings = JSON.parse(localStorage.getItem('rentalCarDetail')) || [];
         // Clear existing rows
         bookingHistoryContainer.innerHTML = '';
 
@@ -61,15 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
         bookings.forEach(booking => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${booking.id}</td>
-                <td>${booking.customerName}</td>
-                <td>${booking.carModel}</td>
-                <td>${booking.bookingDate}</td>
-                <td>${booking.rentalStartDate}</td>
-                <td>${booking.rentalEndDate}</td>
-                <td>${booking.paymentAmount}</td>
-                <td>${booking.paymentStatus}</td>
-                <td>${booking.status}</td>
+                <td>${booking.bookingId || "N/A"}</td>
+                <td>${booking.customerId || "N/A"}</td>
+                <td>${booking.rentalCarId || "N/A"}</td>
+                <td>${booking.bookingAmount || "N/A"}</td>
+                <td>${booking.availableFrom || "N/A"}</td>
+                <td>${booking.availableTo || "N/A"}</td>
+                <td>${booking.rentalDateFrom || "N/A"}</td>
+                <td>${booking.halfPayment || "N/A"}</td>
+                <td>${booking.paymentStatus || "N/A"}</td>
             `;
             bookingHistoryContainer.appendChild(row);
         });
@@ -86,12 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear user-related data from local storage
         localStorage.removeItem('loggedUser');
         localStorage.removeItem('userProfileData');
-        localStorage.removeItem('bookingData');
-        localStorage.removeItem('lastCarDetail'); // If applicable
-        localStorage.removeItem('payments'); // If applicable
-
-        // Optionally, you can clear all local storage
-        // localStorage.clear();
+        localStorage.removeItem('rentalCarDetail');
+        // Optionally clear other keys if applicable
+        localStorage.removeItem('lastCarDetail'); 
+        localStorage.removeItem('payments'); 
 
         // Redirect to the Landing Page
         window.location.href = '../Landing_Page/index.html';

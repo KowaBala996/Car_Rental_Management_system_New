@@ -1,192 +1,154 @@
-// Retrieve stored data from localStorage
-const paymentdetails = JSON.parse(localStorage.getItem('bookingRequest')) || [];
-const payCustomer = JSON.parse(localStorage.getItem('userProfileData')) || [];
-const Profileupdatecustomers = JSON.parse(localStorage.getItem('userProfileData')) || [];
-const lastCarDetail = JSON.parse(localStorage.getItem('bookingCarPayment')) || [];
+function loadBookingDetails() {
+    const bookingData = JSON.parse(localStorage.getItem('bookingCarPayment')) || [];
+    const carData = JSON.parse(localStorage.getItem('bookingCar')) || [];
+    const customerData = JSON.parse(localStorage.getItem('userProfileData')) || [];
 
-// Function to create bookings from payment details
-function createBookings() {
-    const currentDate = new Date().toISOString();
+    const bookingTableBody = document.getElementById('booking-requests');
+    bookingTableBody.innerHTML = '';
 
-    // Retrieve existing bookings
-    let bookings = JSON.parse(localStorage.getItem('bookingData')) || [];
+    if (Array.isArray(bookingData) && bookingData.length > 0) {
+        bookingData.forEach(booking => {
+            const car = carData.find(c => c.carId === booking.rentalCarId);
+            const customer = customerData.find(cust => cust.customerId === booking.customerId);
 
-    // Generate bookings only if they don't already exist
-    if (bookings.length === 0) {
-        bookings = paymentdetails.map(payment => {
-            const customer = payCustomer.find(c => c.id === payment.customerId);
-            const profileUpdateCustomer = Profileupdatecustomers.find(c => c.id === payment.customerId);
-            const car = lastCarDetail;
-
-            const bookingid = `BK-${Math.floor(Math.random() * 1000).toString().padStart(4, '0')}`; // Unique Booking ID
-
-            return {
-                bookingId: bookingid, // Assigning a new booking ID
-                bookingDate: currentDate,
-                customerid: customer?.customerId,
-                name: customer?.customerName,
-                rentalCarId: payment?.rentalCarId,
-                email: customer?.customerEmail,
-                phone: customer?.customerPhone,
-                address: profileUpdateCustomer?.customerAddress,
-                licenseNumber: profileUpdateCustomer?.licenseNumber,
-                carModel: car?.model,
-                paymentStatus: payment?.paymentstatus,
-                proofType: profileUpdateCustomer?.proofType,
-                proofNumber: profileUpdateCustomer?.proofNumber,
-                statusText: "Pending", // Set default status text
-
-                vehicleDetails: {
-                    brand: car?.brand,
-                    model: car?.model,
-                    fuel: car?.fuel,
-                    seats: car?.seats,
-                    price: payment?.totalPrice,
-                    Advancepayment: payment?.paymentamount,
-                    availableFrom: payment?.startDate,
-                    availableTo: payment?.endDate
-                }
-            };
+            const bookingRow = document.createElement('tr');
+            bookingRow.innerHTML = `
+                <td>${booking.paymentId || 'N/A'}</td>
+                <td>${new Date(booking.paymentDate).toLocaleDateString() || 'N/A'}</td>
+                <td>${customer ? customer.customerId : 'N/A'}</td>
+                <td>${booking.rentalCarId || 'N/A'}</td>
+                <td>${booking.bookingAmount || '0'}</td>
+                <td>${car ? new Date(car.bookingStartDate).toLocaleDateString() : 'N/A'}</td>
+                <td>${car ? new Date(car.bookingEndDate).toLocaleDateString() : 'N/A'}</td>
+                <td>${booking.paymentStatus || 'Pending'}</td>
+                <td>
+                    <button class="action-button approve" onclick="updateBookingStatus('${booking.paymentId}', 'Approved')">Approve</button>
+                    <button class="action-button reject" onclick="updateBookingStatus('${booking.paymentId}', 'Rejected')">Reject</button>
+                    <button class="action-button view" onclick="openBookingModal('${booking.paymentId}')">View Details</button>
+                </td>
+                <td>
+                    <button class="rentalBtn" onclick="openRentalModal('${booking.paymentId}')">Rental</button>
+                </td>
+            `;
+            bookingTableBody.appendChild(bookingRow);
         });
-
-        // Only set booking data in localStorage if bookings were created
-        if (bookings.length > 0) {
-            localStorage.setItem('bookingData', JSON.stringify(bookings));
-        }
-    }
-}
-
-// Render bookings in the table
-function renderBookings() {
-    const bookingRequestsTable = document.getElementById('booking-requests');
-    bookingRequestsTable.innerHTML = '';
-
-    const bookings = JSON.parse(localStorage.getItem('bookingData')) || []; // Retrieve bookings from localStorage
-    bookings.forEach((booking, index) => {
+    } else {
         const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${booking.bookingId}</td> <!-- Display Booking ID -->
-            <td>${new Date(booking.bookingDate).toLocaleDateString()}</td> <!-- Display Booking Date -->
-            <td>${booking.customerid}</td>
-            <td>${booking.rentalCarId}</td>
-            <td>${booking.vehicleDetails.Advancepayment}</td>
-            <td>${booking.vehicleDetails.availableFrom}</td>
-            <td>${booking.vehicleDetails.availableTo}</td>
-            <td>${booking.statusText}</td>
-            <td>
-                <button class="view-details" data-index="${index}">View</button>
-                <button class="approve" data-index="${index}" ${booking.statusText === 'Approved' ? 'disabled' : ''}>Approve</button>
-                <button class="reject" data-index="${index}" ${booking.statusText === 'Rejected' ? 'disabled' : ''}>Reject</button>
-            </td>
-            <td>
-                <button class="rent-button" data-index="${index}">Rental</button>
-            </td>
-        `;
-        bookingRequestsTable.appendChild(row);
-    });
-}
-
-// Modal functionality for viewing booking details
-const modal = document.getElementById('myModal');
-const closeModal = document.getElementsByClassName('close')[0];
-
-function showBookingDetails(index) {
-    const booking = JSON.parse(localStorage.getItem('bookingData'))[index]; // Get the correct booking
-    document.getElementById('bookingId').innerText = booking.bookingId; // Ensure consistent booking ID display
-    document.getElementById('bookingDate').innerText = booking.bookingDate;
-    document.getElementById('customerid').innerText = booking.customerid;
-    document.getElementById('name').innerText = booking.name;
-    document.getElementById('rentalCarId').innerText = booking.rentalCarId;
-    document.getElementById('email').innerText = booking.email;
-    document.getElementById('phone').innerText = booking.phone;
-    document.getElementById('address').innerText = booking.address;
-    document.getElementById('license-number').innerText = booking.licenseNumber;
-
-    document.getElementById('paymentAmount').innerText = booking.vehicleDetails.Advancepayment;
-    document.getElementById('paymentStatus').innerText = booking.paymentStatus;
-    document.getElementById('proof-number').innerText = booking.proofNumber;
-    document.getElementById('proof-type').innerText = booking.proofType;
-    document.getElementById('brand').innerText = booking.vehicleDetails.brand;
-    document.getElementById('model').innerText = booking.vehicleDetails.model;
-    document.getElementById('fuel').innerText = booking.vehicleDetails.fuel;
-    document.getElementById('seats').innerText = booking.vehicleDetails.seats;
-    document.getElementById('price').innerText = booking.vehicleDetails.price;
-    document.getElementById('availableFrom').innerText = booking.vehicleDetails.availableFrom;
-    document.getElementById('availableTo').innerText = booking.vehicleDetails.availableTo;
-
-    modal.style.display = "block"; 
-}
-
-closeModal.onclick = function () {
-    modal.style.display = "none"; 
-}
-
-window.onclick = function (event) {
-    if (event.target === modal) {
-        modal.style.display = "none"; 
+        row.innerHTML = `<td colspan="10">No booking requests available.</td>`;
+        bookingTableBody.appendChild(row);
     }
 }
 
-// Rental modal functionality
-const rentalModal = document.getElementById('rentalModal');
-const closeRentalModal = document.getElementsByClassName('close-rental-modal')[0];
+function openRentalModal(bookingId) {
+    const bookingData = JSON.parse(localStorage.getItem('bookingCarPayment')) || [];
+    const carData = JSON.parse(localStorage.getItem('bookingCar')) || [];
+    const customerData = JSON.parse(localStorage.getItem('userProfileData')) || [];
 
-function showRentalModal(index) {
-    const booking = JSON.parse(localStorage.getItem('bookingData'))[index]; 
-    document.getElementById('rentalStartDate').value = ''; 
-    document.getElementById('halfPayment').value = ''; 
-    rentalModal.style.display = "block"; 
+    const booking = bookingData.find(b => b.paymentId === bookingId);
+    const car = carData.find(c => c.carId === booking.rentalCarId);
+    const customer = customerData.find(cust => cust.customerId === booking.customerId);
+
+    if (booking && car && customer) {
+        document.getElementById('modalBookingId').textContent = booking.paymentId;
+        document.getElementById('modalCustomerName').textContent = customer.customerName;
+        document.getElementById('modalCarModel').textContent = car.model;
+
+        const modal = document.getElementById("rentalModal");
+        modal.style.display = "block";
+
+        const closeRentalModalBtn = document.querySelector(".close-rental-modal");
+        closeRentalModalBtn.onclick = () => {
+            modal.style.display = "none";
+        };
+
+        document.getElementById('confirmRental').onclick = () => {
+            const rentalStartDate = document.getElementById('rentalStartDate').value;
+            const halfPayment = document.getElementById('halfPayment').value;
+            const existingRentalDetails = JSON.parse(localStorage.getItem('rentalCarDetail')) || [];
+
+
+            if (!rentalStartDate || !halfPayment) {
+                alert("Please enter all required fields."); 
+                return; 
+            }
+
+            const rentalDetails = {
+                bookingId: booking.paymentId,
+                customerId: customer.customerId,
+                rentalCarId: booking.rentalCarId,
+                bookingAmount: booking.bookingAmount,
+                paymentStatus: booking.paymentStatus || 'Pending',
+                availableFrom: new Date(car.bookingStartDate).toLocaleDateString(),
+                availableTo: new Date(car.bookingEndDate).toLocaleDateString(),
+                rentalDateFrom: rentalStartDate,
+                halfPayment: halfPayment
+            };
+
+            existingRentalDetails.push(rentalDetails);
+            localStorage.setItem('rentalCarDetail', JSON.stringify(existingRentalDetails));
+
+            const rentalButton = document.querySelector(`.rentalBtn[onclick="openRentalModal('${booking.paymentId}')"]`);
+            if (rentalButton) { 
+                rentalButton.textContent = 'Rented';
+                rentalButton.disabled = true; 
+            }
+
+            modal.style.display = "none"; 
+            loadBookingDetails(); 
+        };
+    }
 }
 
-closeRentalModal.onclick = function () {
-    rentalModal.style.display = "none"; // Close rental modal
+function updateBookingStatus(paymentId, status) {
+    const bookingData = JSON.parse(localStorage.getItem('bookingCarPayment')) || [];
+    const booking = bookingData.find(b => b.paymentId === paymentId);
+    
+    if (booking) {
+        booking.paymentStatus = status || 'Pending';
+        localStorage.setItem('bookingCarPayment', JSON.stringify(bookingData));
+        loadBookingDetails(); 
+    }
 }
 
-document.getElementById('confirmRental').addEventListener('click', function() {
-    const rentalStartDate = document.getElementById('rentalStartDate').value;
-    const halfPayment = document.getElementById('halfPayment').value;
+function openBookingModal(bookingId) {
+    const bookingData = JSON.parse(localStorage.getItem('bookingCarPayment')) || [];
+    const carData = JSON.parse(localStorage.getItem('bookingCar')) || [];
+    const customerData = JSON.parse(localStorage.getItem('userProfileData')) || [];
 
-    // Validate inputs
-    if (!rentalStartDate || !halfPayment) {
-        alert('Please fill in all fields.');
-        return;
+    const booking = bookingData.find(b => b.paymentId === bookingId);
+    const car = carData.find(c => c.carId === booking.rentalCarId);
+    const customer = customerData.find(cust => cust.customerId === booking.customerId);
+
+    if (booking && car && customer) {
+        document.getElementById('bookingId').textContent = booking.paymentId;
+        document.getElementById('bookingDate').textContent = new Date(booking.paymentDate).toLocaleDateString();
+        document.getElementById('customerid').textContent = customer.customerId;
+        document.getElementById('name').textContent = customer.customerName;
+        document.getElementById('rentalCarId').textContent = booking.rentalCarId;
+        document.getElementById('email').textContent = customer.customerEmail;
+        document.getElementById('phone').textContent = customer.customerPhone;
+        document.getElementById('address').textContent = customer.customerAddress;
+        document.getElementById('license-number').textContent = customer.licenseNumber;
+        document.getElementById('paymentAmount').textContent = booking.bookingAmount;
+        document.getElementById('paymentStatus').textContent = booking.paymentStatus;
+        document.getElementById('proof-type').textContent = customer.proofType;
+        document.getElementById('proof-number').textContent = customer.proofNumber;
+        document.getElementById('brand').textContent = car.brand;
+        document.getElementById('model').textContent = car.model;
+        document.getElementById('fuel').textContent = car.fuel;
+        document.getElementById('seats').textContent = car.seats;
+        document.getElementById('price').textContent = car.totalPrice;
+        document.getElementById('availableFrom').textContent = new Date(car.bookingStartDate).toLocaleDateString();
+        document.getElementById('availableTo').textContent = new Date(car.bookingEndDate).toLocaleDateString();
     }
 
-    // Here you can handle the rental logic, such as storing the rental details
-    alert(`Rental confirmed!\nStart Date: ${rentalStartDate}\nHalf Payment: ${halfPayment}`);
+    const modal = document.getElementById("myModal");
+    modal.style.display = "block";
 
-    rentalModal.style.display = "none"; // Close rental modal
-});
+    const closeBtn = document.querySelector(".close");
+    closeBtn.onclick = () => {
+        modal.style.display = "none";
+    };
+}
 
-// Add event listeners for view, approve, and reject buttons
-document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('view-details')) {
-        const index = event.target.getAttribute('data-index');
-        showBookingDetails(index); 
-    }
-
-    if (event.target.classList.contains('approve')) {
-        const index = event.target.getAttribute('data-index');
-        const bookings = JSON.parse(localStorage.getItem('bookingData'));
-        bookings[index].statusText = "Approved"; 
-        localStorage.setItem('bookingData', JSON.stringify(bookings));
-        renderBookings(); 
-    }
-
-    if (event.target.classList.contains('reject')) {
-        const index = event.target.getAttribute('data-index');
-        const bookings = JSON.parse(localStorage.getItem('bookingData'));
-        bookings[index].statusText = "Rejected"; 
-        localStorage.setItem('bookingData', JSON.stringify(bookings));
-        renderBookings(); 
-    }
-
-    if (event.target.classList.contains('rent-button')) {
-        const index = event.target.getAttribute('data-index');
-        showRentalModal(index); 
-    }
-});
-
-// Call functions to set up initial state
-createBookings();
-renderBookings();
+window.onload = loadBookingDetails;

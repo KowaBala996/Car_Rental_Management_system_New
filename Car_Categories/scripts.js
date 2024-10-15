@@ -1,24 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     let carDetailsArray = JSON.parse(localStorage.getItem('bookingCar')) || [];
 
-    // Get cars from localStorage
     const getCarsFromLocalStorage = () => {
         const storedCars = localStorage.getItem('cars');
         return storedCars ? JSON.parse(storedCars) : [];
     };
 
-    // Save car details to localStorage
     const saveCarDetailsToLocalStorage = () => {
         localStorage.setItem('bookingCar', JSON.stringify(carDetailsArray));
     };
 
-    // Generate a unique ID for each car
-    const generateUniqueId = () => {
-        const randomNumber = Math.floor(Math.random() * 1000);
-        return `car${randomNumber}`;
-    };
-
-    // Display cars on the page
     const displayCars = (cars) => {
         const carList = document.getElementById('car-list');
         carList.innerHTML = '';
@@ -40,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Scroll to the top of the page
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
@@ -48,12 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Calculate total hours between two dates
     const calculateTotalHours = (startDateTime, endDateTime) => {
-        return Math.abs(endDateTime - startDateTime) / 36e5; // Total hours
+        return Math.abs(endDateTime - startDateTime) / 36e5; 
     };
 
-    // Show car details after selecting dates and times
     const showCarDetails = (car) => {
         const carDetailsDiv = document.getElementById('car-details');
         const startDate = document.getElementById('start-date').value;
@@ -71,22 +59,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalHours = calculateTotalHours(startDateTime, endDateTime);
         const totalPrice = totalHours * car.price;
 
+        // Get ID from local storage
+        const carsData = getCarsFromLocalStorage();
+        const carId = carsData.find(c => c.brand === car.brand && c.model === car.model).id; // Get the ID based on car's brand and model
+
         const carDetails = {
-            carId: generateUniqueId(),
+            carId: carId, // Use the retrieved car ID
             brand: car.brand,
             model: car.model,
             image: car.image,
             transmission: car.transmission,
             fuel: car.fuel,
             seats: car.seats,
-            hourlyRate: car.price, // Changed name to hourlyRate
+            hourlyRate: car.price, 
             bookingStartDate: startDateTime.toISOString().slice(0, -5), // Format to omit seconds
             bookingEndDate: endDateTime.toISOString().slice(0, -5), // Format to omit seconds
             totalHours: totalHours.toFixed(2),
             totalPrice: totalPrice.toFixed(2)
         };
 
-        carDetailsArray.splice(0);
         carDetailsArray.push(carDetails);
         saveCarDetailsToLocalStorage();
 
@@ -110,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('ContinueBooking').addEventListener('click', () => {
             const loggedUser = JSON.parse(localStorage.getItem('loggedUser'));
             const isLoggedIn = loggedUser !== null;
-            const carId = carDetails.carId; // Corrected to carId
 
             if (isLoggedIn) {
                 const customers = JSON.parse(localStorage.getItem('userProfileData')) || [];
@@ -128,11 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Fetch and display available cars
     const carsData = getCarsFromLocalStorage();
     displayCars(carsData);
 
-    // Filter form handling
     const filterForm = document.getElementById('filter-form');
     filterForm.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -175,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
         displayCars(filteredCars);
     });
 
-    // Search functionality for cars based on selected dates
     const searchButton = document.getElementById('search-button');
     searchButton.addEventListener('click', () => {
         const startDate = document.getElementById('start-date').value;
@@ -211,23 +198,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Set the current date as the minimum for the start date
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('start-date').setAttribute('min', today);
     document.getElementById('end-date').setAttribute('min', today);
     document.addEventListener("DOMContentLoaded", function () {
         const logoutButton = document.getElementById('logoutButton');
 
-        // Logout function to clear loggedUser from localStorage and redirect to login page
         logoutButton.addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent default link behavior
-
-            // Remove loggedUser from localStorage
-            localStorage.removeItem('loggedUser');
-
-            // Redirect to login page after logging out
-            window.location.href = '../Customer_login/login.html';
+            event.preventDefault(); // Prevent the default link behavior
+            localStorage.removeItem('loggedUser'); // Clear the logged user from local storage
+            window.location.href = '../Customer_login/login.html'; // Redirect to login page
         });
     });
-
 });

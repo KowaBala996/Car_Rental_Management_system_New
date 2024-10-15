@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const updatedUserRequests = userRequests.map(user => {
             const updatedUser = { ...user };
             if (!updatedUser.id) { // Ensure every user has an id
-                updatedUser.id = updatedUser.customerId; // Fallback to customerId
+                updatedUser.id = String(updatedUser.customerId); // Ensure ID is a string
             }
             return updatedUser;
         });
@@ -32,8 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${user.customerName}</td>
                 <td>${user.customerPhone}</td>
                 <td>${user.licenseNumber}</td>
-
-                
                 <td>${user.profileStatus}</td>
                 <td>
                     <button class="view-btn" data-user-id="${user.id}">View</button>
@@ -47,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and display user data in the modal
     function openModal(userId) {
-        const user = userRequests.find(u => u.id === userId);
+        const user = userRequests.find(u => String(u.id) === userId); // Compare as strings
         if (!user) {
             console.error(`No user found with ID ${userId}`);
             return;
@@ -57,12 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('email').textContent = user.customerEmail;
         document.getElementById('phone').textContent = user.customerPhone;
         document.getElementById('customerNicnumber').textContent = user.customerNicnumber;
-
         document.getElementById('address').textContent = user.customerAddress;
         document.getElementById('license-number').textContent = user.licenseNumber;
         document.getElementById('proof-type').textContent = user.proofType;
         document.getElementById('proof-number').textContent = user.SelectedIDProofNumber;
-
         document.getElementById('postal-code').textContent = user.postalCode;
         document.getElementById('license-front').src = user.licenseFrontImage;
         document.getElementById('license-back').src = user.licenseBackImage;
@@ -77,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update user status
     function updateUserStatus(userId, status) {
-        const userIndex = userRequests.findIndex(u => u.id === userId);
+        const userIndex = userRequests.findIndex(u => String(u.id) === userId); // Compare as strings
         if (userIndex === -1) {
             console.error(`User with ID ${userId} not found.`);
             return;

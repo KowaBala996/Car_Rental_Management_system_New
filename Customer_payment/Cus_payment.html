@@ -28,7 +28,8 @@
             <div class="user-dropdown">
                 User ▼
                 <div class="user-dropdown-content">
-                    <a href="#">Profile</a>
+                    <a href="../Customer_Dasboard/cust_Dasboard.html">Profile</a>
+
                     <a href="#" id="logoutButton">Logout</a> <!-- Updated Logout link with an ID -->
                 </div>
             </div>
@@ -67,11 +68,9 @@
 
                         <label for="payment-method">Payment Method</label>
                         <input type="text" id="payment-method" name="payment-method" required>
-
-                        <label for="payment-status">Payment status Message (max 20 words):</label>
-                        <input type="text" id="payment-status" name="payment-status" required>
-                        <p id="word-count">0/20 words</p>
                         <button type="submit">Request</button>
+
+                      
 
                     </fieldset>
 
@@ -170,7 +169,6 @@
                 const paymentDate = document.getElementById('payment-date').value;
                 const bookingAmount = document.getElementById('payment-amount').value;
                 const paymentMethod = document.getElementById('payment-method').value;
-                const paymentStatus = document.getElementById('payment-status').value;
 
                 // Generate unique payment ID using current timestamp
                 const paymentId = 'PAY_' + Math.floor(Math.random() * 1000);
@@ -182,7 +180,6 @@
                     paymentDate: paymentDate,
                     bookingAmount: parseFloat(bookingAmount),
                     paymentMethod: paymentMethod,
-                    paymentStatus: paymentStatus,
                     rentalCarId: carid || '',
                     customerId: customerid,
                 };
