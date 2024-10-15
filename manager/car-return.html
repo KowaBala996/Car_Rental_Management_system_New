@@ -39,14 +39,58 @@
             <!-- Optional header content can go here -->
         </header>
 
+       
+
+<!-- 001 -->
+
+<main class="content">
+    <header class="content-header">
+        <h1> Car Return </h1>
+        <div class="search-container">
+            <!-- 
+                <input type="text" id="searchInput" placeholder="Search" class="search-box" /> -->
+            <button id="openModalBtn" class="add-car">Open Modal</button>
+        </div>
+    </header>
+    <table class="car-table">
+        <thead>
+            <tr>
+                <!-- <th>Booking Number</th> -->
+                <th>NIC/Passport No</th>
+                <th>Start Date</th>
+                <th>Return Date</th>
+                <th>Exra Payment</th>
+                <th>Remarks for Car</th>
+                <th>Remarks for User</th>
+                <th>Total (LKR)</th>
+                <!-- <th>Image</th>
+                <th>Available From</th>
+                <th>Available To</th>
+                <th>Actions</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+</main>
+
+<!-- 001 -->
+
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModalBtn">&times;</span>
+                
         <div class="container">
-            <form id="car-return-form">
+            <form id="booking-form">
                 <h2><ion-icon name="calculator-outline"></ion-icon> Car Return</h2>
 
-                <label for="carBookNumber">Car Booking Number</label>
+                <!-- <label for="carBookNumber">Car Booking Number</label>
                 <select id="carBookNumber" name="carBookNumber" required>
                     <option value="">Select Car</option>
-                </select>
+                </select> -->
 
                 <label for="userNIC">User NIC/Passport No</label>
                 <input type="text" id="userNIC" name="userNIC" required>
@@ -58,7 +102,7 @@
                 <input type="date" id="returnDate" name="returnDate" required>
 
                 <label for="Exra Payment">Exra Payment</label>
-                <input type="number" id="Exra Payment" name="Exra Payment" required>
+                <input type="number" id="Exra-Payment" name="Exra Payment" required>
 
                 
                 <div class="checkbox-group">
@@ -85,11 +129,17 @@
                 <div class="buttons">
                     <button type="button" class="btn" onclick="calculateTotal()">Calculate Total</button>
                     <button type="reset" class="btn">Reset</button>
-                    <button type="submit" class="btn">Submit</button>
+                    <button type="submit" class="btn" onclick="populateTable()"> Submit </button>
                     <button type="button" class="btn" onclick="printReceipt()">Print Receipt</button>
                 </div>
             </form>
         </div>
+                
+                
+            </div>
+        </div>
+
+
     </main>
 
     <footer>
@@ -97,6 +147,65 @@
     </footer>
 
     <script src="car_return.js"></script>
+
+    <script>
+        // Sample data to be displayed after submission
+        const bookings = [];
+
+        // Function to populate the table with the new booking
+        function populateTable() {
+            const tableBody = document.querySelector('.car-table tbody');
+            tableBody.innerHTML = ''; // Clear existing rows
+            bookings.forEach(booking => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                                      <td>${booking.nicPassportNo}</td>
+                    <td>${booking.startDate}</td>
+                    <td>${booking.returnDate}</td>
+                    <td>${booking.extraPayment}</td>
+                    <td>${booking.remarksForCar}</td>
+                    <td>${booking.remarksForUser}</td>
+                    <td>${booking.total}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Event listener for the form submission    11111  <td>${booking.bookingNumber}</td>
+
+        document.getElementById('booking-form').addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Gather form data
+            // const bookingNumber = document.getElementById('booking-number').value;
+            const nicPassportNo = document.getElementById('userNIC').value;
+            const startDate = document.getElementById('startDate').value;
+            const returnDate = document.getElementById('returnDate').value;
+            const extraPayment = parseFloat(document.getElementById('Exra-Payment').value);
+            const remarksForCar = document.getElementById('remarksCar').value;
+            const remarksForUser = document.getElementById('remarksUser').value;
+            const total = 20000 + extraPayment; // Example total calculation
+
+            // Create a new booking object
+            const newBooking = {
+                // bookingNumber,
+                nicPassportNo,
+                startDate,
+                returnDate,
+                extraPayment,
+                remarksForCar,
+                remarksForUser,
+                total,
+            };
+
+            // Add the new booking to the bookings array
+            bookings.push(newBooking);
+
+            // Populate the table with new data and show it
+            populateTable(); 
+            document.querySelector('.car-table').style.display = 'table'; // Show the table
+        });
+    </script>
 </body>
 
 </html>

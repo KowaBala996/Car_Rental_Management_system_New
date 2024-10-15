@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginInfo = document.querySelector(".login-info");
     const loginForm = document.querySelector(".login-form");
     const registerLink = document.getElementById("registerLink");
-    
 
     closeButton.addEventListener("click", () => {
         loginInfo.style.display = "none";
@@ -43,24 +42,27 @@ document.addEventListener("DOMContentLoaded", function () {
         let customer = customers.find(c => c.customerNicnumber === nic && c.password === password);
 
         if (customer) {
-            document.getElementById('demo1').innerHTML = "Login successful!";
+            document.getElementById('demo1').innerHTML = "Login successful! Redirecting...";
             document.getElementById('logincontinue').style.display = "none";
             document.getElementById('deleteX').style.display = "none";
 
-            const loggedUser = { "customerNicnumber": customer.customerNicnumber, "password": customer.password };
-            localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
+            // Delay for 100 milliseconds before redirecting
+            setTimeout(() => {
+                const loggedUser = { "customerNicnumber": customer.customerNicnumber, "password": customer.password };
+                localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
 
-            
-            // Redirect based on verification status and carId presence
-            if (!carId) {
-                window.location.href = `../Landing_Page/index.html`;
-            } else {
-                if (uProfileData && uProfileData.profileStatus === "Verified") {
-                    window.location.href = `../Verified_Customer/Verified_Customer.html?carid=${carId}&customerid=${customer.customerId}`;
+                // Redirect based on verification status and carId presence
+                if (!carId && customer.profileStatus === "Verified") {
+                    window.location.href = `../Landing_Page/index.html`;
                 } else {
-                    window.location.href = `../Profile_Details/profileupdateform.html?carid=${carId}&customerid=${customer.customerId}`;
+                    if (customer.profileStatus === "Verified") { // Ensure uProfileData is defined and used properly
+                        window.location.href = `../Verified_Customer/Verified_Customer.html?carid=${carId}&customerid=${customer.customerId}`;
+                    } else {
+                        window.location.href = `../Profile_Details/profileupdateform.html?carid=${carId}&customerid=${customer.customerId}`;
+                    }
                 }
-            }
+            }, 100); // Adjust the time as needed
+
         } else {
             document.getElementById('demo1').innerHTML = "Incorrect NIC or password.";
             document.getElementById('logincontinue').style.display = "none";

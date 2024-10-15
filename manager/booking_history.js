@@ -1,68 +1,35 @@
-// Sample data for testing (make sure to run this to see bookings)
-const bookingData = [
-    {
-        id: "1",
-        customerName: "Balasingam Kowarthanan",
-        carModel: "GR Supra",
-        bookingDate: "2024-10-01",
-        rentalStartDate: "2024-10-18",
-        rentalEndDate: "2024-10-30",
-        paymentAmount: "57403.33",
-        paymentStatus: "Pending",
-        status: "Confirmed"
-    },
-    {
-        id: "2",
-        customerName: "John Doe",
-        carModel: "Toyota Corolla",
-        bookingDate: "2024-10-02",
-        rentalStartDate: "2024-10-20",
-        rentalEndDate: "2024-10-25",
-        paymentAmount: "30000.00",
-        paymentStatus: "Completed",
-        status: "Confirmed"
-    }
-];
+// Ensure the script runs after the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+    const bookingHistoryTable = document.getElementById("booking-history");
 
-// Save to local storage for testing (Uncomment this line if you need to save it again)
-// localStorage.setItem('bookingData', JSON.stringify(bookingData));
+    // Function to load booking history from local storage
+    function loadBookingHistory() {
+        // Retrieve rental car details from local storage
+        const rentalCarDetail = JSON.parse(localStorage.getItem("rentalCarDetail")) || {};
 
-// Function to fetch booking data from localStorage and render it in the table
-function renderBookings() {
-    // Retrieve booking data from localStorage
-    const bookings = JSON.parse(localStorage.getItem('bookingData')) || [];
-    console.log(bookings)
-    const bookingHistory = document.getElementById('booking-history');
-
-    // Clear existing rows
-    bookingHistory.innerHTML = '';
-
-    // Check if there are any bookings
-    if (bookings.length === 0) {
-        // If no bookings, display a message
-        const row = document.createElement('tr');
-        row.innerHTML = '<td colspan="9" style="text-align:center;">No bookings available.</td>';
-        bookingHistory.appendChild(row);
-        return; // Exit the function if no bookings
+        // Check if rentalCarDetail has the expected structure
+        if (rentalCarDetail && rentalCarDetail.bookingId) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${rentalCarDetail.bookingId || 'N/A'}</td>
+                <td>${rentalCarDetail.customerId || 'N/A'}</td>
+                <td>${rentalCarDetail.rentalCarId || 'N/A'}</td>
+                <td>${new Date().toLocaleDateString() || 'N/A'}</td>
+                <td>${rentalCarDetail.availableFrom || 'N/A'}</td>
+                <td>${rentalCarDetail.availableTo || 'N/A'}</td>
+                <td>${rentalCarDetail.halfPayment || '0'}</td>
+                <td>${rentalCarDetail.paymentStatus || 'Pending'}</td>
+                <td>${(rentalCarDetail.paymentStatus === "Approved") ? "Confirmed" : "Pending"}</td>
+            `;
+            bookingHistoryTable.appendChild(row);
+        } else {
+            // If there is no booking history, show a message
+            const row = document.createElement("tr");
+            row.innerHTML = `<td colspan="9">No booking history available.</td>`;
+            bookingHistoryTable.appendChild(row);
+        }
     }
 
-    // Loop through bookings and create table rows
-    bookings.forEach(booking => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${booking.bookingId}</td>
-            <td>${booking.name}</td>
-            <td>${booking.carModel}</td>
-            <td>${booking.bookingDate}</td>
-            <td>${booking.vehicleDetails.availableFrom}</td>
-            <td>${booking.vehicleDetails.availableTo}</td>
-            <td>${booking.vehicleDetails.Advancepayment}</td>
-            <td>${booking.paymentStatus}</td>
-            <td>${booking.statusText}</td>
-        `;
-        bookingHistory.appendChild(row);
-    });
-}
-
-// Call the function to render bookings on page load
-document.addEventListener('DOMContentLoaded', renderBookings);
+    // Call the function to load the booking history when the page is loaded
+    loadBookingHistory();
+});
