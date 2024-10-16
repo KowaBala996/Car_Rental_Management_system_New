@@ -4,7 +4,7 @@ function loadBookingDetails() {
     const customerData = JSON.parse(localStorage.getItem('userProfileData')) || [];
 
     const bookingTableBody = document.getElementById('booking-requests');
-    bookingTableBody.innerHTML = '';
+    bookingTableBody.innerHTML = ''; // Clear previous data
 
     if (Array.isArray(bookingData) && bookingData.length > 0) {
         bookingData.forEach(booking => {
@@ -65,7 +65,6 @@ function openRentalModal(bookingId) {
             const rentalStartDate = document.getElementById('rentalStartDate').value;
             const halfPayment = document.getElementById('halfPayment').value;
             const existingRentalDetails = JSON.parse(localStorage.getItem('rentalCarDetail')) || [];
-
 
             if (!rentalStartDate || !halfPayment) {
                 alert("Please enter all required fields."); 

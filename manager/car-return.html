@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Car Return Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="car_return.css">
-
 </head>
 
 <body>
@@ -17,7 +16,6 @@
                 <img src="../asset/downloadlogo.png" alt="logo" class="sidebar-logo">
             </div>
         </h2>
-
         <ul>
             <li><a href="dashboard.html">Dashboard</a></li>
         </ul>
@@ -26,185 +24,155 @@
             <li><a href="booking.html">Booking</a></li>
             <li><a href="booking_history.html">Rental History</a></li>
             <li><a href="verify_users.html">Verify Users</a></li>
-          
         </ul>
         <h2>Manage Services</h2>
         <ul>
-            <li><a href="car_details.html" class="active">Car Details</a></li>
+            <li><a href="car_details.html" class="active">Car Return</a></li>
         </ul>
     </div>
 
     <main class="content">
         <header class="content-header">
-            <!-- Optional header content can go here -->
+            <h1>Car Return</h1>
+            <div class="search-container">
+                <button id="openModalBtn" class="add-car">Open Modal</button>
+            </div>
         </header>
 
-       
+        <table class="car-table">
+            <thead>
+                <tr>
+                    <th>Rental Car ID</th>
+                    <th>Start Date</th>
+                    <th>Return Date</th>
+                    <th>Extra Payment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically inserted here -->
+            </tbody>
+        </table>
 
-<!-- 001 -->
-
-<main class="content">
-    <header class="content-header">
-        <h1> Car Return </h1>
-        <div class="search-container">
-            <!-- 
-                <input type="text" id="searchInput" placeholder="Search" class="search-box" /> -->
-            <button id="openModalBtn" class="add-car">Open Modal</button>
-        </div>
-    </header>
-    <table class="car-table">
-        <thead>
-            <tr>
-                <!-- <th>Booking Number</th> -->
-                <th>NIC/Passport No</th>
-                <th>Start Date</th>
-                <th>Return Date</th>
-                <th>Exra Payment</th>
-                <th>Remarks for Car</th>
-                <th>Remarks for User</th>
-                <th>Total (LKR)</th>
-                <!-- <th>Image</th>
-                <th>Available From</th>
-                <th>Available To</th>
-                <th>Actions</th> -->
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Rows will be inserted here by JavaScript -->
-        </tbody>
-    </table>
-</main>
-
-<!-- 001 -->
-
-
-        <!-- The Modal -->
+        <!-- Modal -->
         <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close" id="closeModalBtn">&times;</span>
-                
-        <div class="container">
-            <form id="booking-form">
-                <h2><ion-icon name="calculator-outline"></ion-icon> Car Return</h2>
+                <div class="container">
+                    <form id="booking-form">
+                        <h2><ion-icon name="calculator-outline"></ion-icon> Car Return</h2>
+                        
+                        <!-- Car Rental ID -->
+                        <label for="rentalCarId">Car Rental ID</label>
+                        <select id="rentalCarId" name="rentalCarId" required>
+                            <option value=""></option>
+                        </select>
 
-                <!-- <label for="carBookNumber">Car Booking Number</label>
-                <select id="carBookNumber" name="carBookNumber" required>
-                    <option value="">Select Car</option>
-                </select> -->
+                        <!-- Start Date -->
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" name="startDate" required>
 
-                <label for="userNIC">User NIC/Passport No</label>
-                <input type="text" id="userNIC" name="userNIC" required>
+                        <!-- Return Date -->
+                        <label for="returnDate">Return Date</label>
+                        <input type="date" id="returnDate" name="returnDate" required>
 
-                <label for="startDate">Start Date</label>
-                <input type="date" id="startDate" name="startDate" required>
+                        <!-- Extra Payment -->
+                        <label for="extraPayment">Extra Payment</label>
+                        <input type="number" id="extraPayment" name="extraPayment" required>
 
-                <label for="returnDate">Return Date</label>
-                <input type="date" id="returnDate" name="returnDate" required>
-
-                <label for="Exra Payment">Exra Payment</label>
-                <input type="number" id="Exra-Payment" name="Exra Payment" required>
-
-                
-                <div class="checkbox-group">
-                    <label><input type="checkbox" name="noDamage" value="No Damage"> No Damage</label>
-                    <label><input type="checkbox" name="noAccident" value="No Accident"> No Accident</label>
-                    <label><input type="checkbox" name="noDrunkDrive" value="No Drunk & Drive or Over Speed"> No Drunk &
-                        Drive or Over Speed</label>
-                    <label><input type="checkbox" name="noPoliceCase" value="No Police Case or Crime Activity"> No
-                        Police Case or Crime Activity</label>
-                    
+                        <div class="buttons">
+                            <button type="reset" class="btn">Reset</button>
+                            <button type="submit" class="btn">Submit</button>
+                            <button type="button" class="btn" onclick="printReceipt()">Print Receipt</button>
+                        </div>
+                    </form>
                 </div>
-
-                <label for="remarksCar">Remarks for Car</label>
-                <textarea id="remarksCar" name="remarksCar"></textarea>
-
-                <label for="remarksUser">Remarks for User</label>
-                <textarea id="remarksUser" name="remarksUser"></textarea>
-
-                <div class="total-cost">
-                    <label for="totalLKR">Total (LKR)</label>
-                    <input type="number" id="totalLKR" name="totalLKR" readonly>
-                </div>
-
-                <div class="buttons">
-                    <button type="button" class="btn" onclick="calculateTotal()">Calculate Total</button>
-                    <button type="reset" class="btn">Reset</button>
-                    <button type="submit" class="btn" onclick="populateTable()"> Submit </button>
-                    <button type="button" class="btn" onclick="printReceipt()">Print Receipt</button>
-                </div>
-            </form>
-        </div>
-                
-                
             </div>
         </div>
-
-
     </main>
 
     <footer>
         &copy; 2024 Car Rental Services. All Rights Reserved.
     </footer>
 
-    <script src="car_return.js"></script>
-
     <script>
-        // Sample data to be displayed after submission
-        const bookings = [];
+        // Populate rentalCarId select box
+        function populateRentalCarIdOptions() {
+            const rentalCarDetail = JSON.parse(localStorage.getItem("rentalCarDetail")) || [];
+            const rentalCarIdSelect = document.getElementById("rentalCarId");
 
-        // Function to populate the table with the new booking
+            rentalCarIdSelect.innerHTML = '<option value=""></option>'; // Clear existing options
+
+            rentalCarDetail.forEach(booking => {
+                const option = document.createElement('option');
+                option.value = booking.rentalCarId; // Assuming rentalCarId is stored
+                option.textContent = booking.rentalCarId; // Display it
+                rentalCarIdSelect.appendChild(option);
+            });
+        }
+
+        // Populate the table with data from localStorage
         function populateTable() {
+            const rentalCarDetail = JSON.parse(localStorage.getItem("rentalCarDetail")) || [];
             const tableBody = document.querySelector('.car-table tbody');
             tableBody.innerHTML = ''; // Clear existing rows
-            bookings.forEach(booking => {
+
+            rentalCarDetail.forEach(booking => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                                      <td>${booking.nicPassportNo}</td>
+                    <td>${booking.rentalCarId}</td>
                     <td>${booking.startDate}</td>
                     <td>${booking.returnDate}</td>
                     <td>${booking.extraPayment}</td>
-                    <td>${booking.remarksForCar}</td>
-                    <td>${booking.remarksForUser}</td>
-                    <td>${booking.total}</td>
                 `;
                 tableBody.appendChild(row);
             });
         }
 
-        // Event listener for the form submission    11111  <td>${booking.bookingNumber}</td>
-
+        // Handle form submission
         document.getElementById('booking-form').addEventListener("submit", function(event) {
             event.preventDefault(); // Prevent form submission
-
-            // Gather form data
-            // const bookingNumber = document.getElementById('booking-number').value;
-            const nicPassportNo = document.getElementById('userNIC').value;
+            const rentalCarId = document.getElementById('rentalCarId').value; // Get rentalCarId from the select box
             const startDate = document.getElementById('startDate').value;
             const returnDate = document.getElementById('returnDate').value;
-            const extraPayment = parseFloat(document.getElementById('Exra-Payment').value);
-            const remarksForCar = document.getElementById('remarksCar').value;
-            const remarksForUser = document.getElementById('remarksUser').value;
-            const total = 20000 + extraPayment; // Example total calculation
+            const extraPayment = parseFloat(document.getElementById('extraPayment').value);
 
-            // Create a new booking object
             const newBooking = {
-                // bookingNumber,
-                nicPassportNo,
+                rentalCarId,  // Store rentalCarId
                 startDate,
                 returnDate,
                 extraPayment,
-                remarksForCar,
-                remarksForUser,
-                total,
             };
 
-            // Add the new booking to the bookings array
-            bookings.push(newBooking);
+            const existingBookings = JSON.parse(localStorage.getItem("rentalCarDetail")) || [];
+            existingBookings.push(newBooking);
+            localStorage.setItem("rentalCarDetail", JSON.stringify(existingBookings));
 
-            // Populate the table with new data and show it
-            populateTable(); 
-            document.querySelector('.car-table').style.display = 'table'; // Show the table
+            populateTable(); // Update table with the new booking
+            populateRentalCarIdOptions(); // Update select options if needed
         });
+
+        // Modal functionality
+        const modal = document.getElementById("myModal");
+        const btn = document.getElementById("openModalBtn");
+        const span = document.getElementById("closeModalBtn");
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Populate table and select options on page load
+        populateTable();
+        populateRentalCarIdOptions();
     </script>
 </body>
 
