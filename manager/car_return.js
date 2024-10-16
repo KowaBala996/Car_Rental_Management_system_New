@@ -23,7 +23,11 @@ function populateCarBookingDropdown() {
 
 // Function to calculate total amount based on extra payments and display it
 function calculateTotal() {
+<<<<<<< HEAD
     const extraPaymentInput = document.getElementById('Exra-Payment');
+=======
+    const extraPaymentInput = document.getElementById('Exra Payment');
+>>>>>>> 95c260b99f4bebea947681a72ca378defc5ad1be
     const totalCostInput = document.getElementById('totalLKR');
 
     // Assuming you want to calculate total cost based on some fixed base amount + extra payment
@@ -38,6 +42,7 @@ function calculateTotal() {
 }
 
 // Function to handle form submission
+<<<<<<< HEAD
 // function handleFormSubmit(event) {
 //     event.preventDefault(); // Prevent the default form submission behavior
 
@@ -57,6 +62,27 @@ function calculateTotal() {
 //     // You can add more logic here, such as sending the data to a server or updating localStorage.
 //     alert('Form submitted successfully!');
 // }
+=======
+function handleFormSubmit(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    // Get form data
+    const formData = new FormData(event.target);
+    const userNIC = formData.get('userNIC');
+    const returnDate = formData.get('returnDate');
+    const remarksCar = formData.get('remarksCar');
+    const remarksUser = formData.get('remarksUser');
+
+    // Example: Logging the form data to console
+    console.log('User NIC:', userNIC);
+    console.log('Return Date:', returnDate);
+    console.log('Remarks for Car:', remarksCar);
+    console.log('Remarks for User:', remarksUser);
+
+    // You can add more logic here, such as sending the data to a server or updating localStorage.
+    alert('Form submitted successfully!');
+}
+>>>>>>> 95c260b99f4bebea947681a72ca378defc5ad1be
 
 // Function to print receipt (can be customized)
 window.printReceipt = () => {
@@ -66,7 +92,11 @@ window.printReceipt = () => {
         User NIC/Passport No: ${form.userNIC.value}\n
         Start Date: ${form.startDate.value}\n
         Return Date: ${form.returnDate.value}\n
+<<<<<<< HEAD
         Extra Payment: ${form["Exra-Payment"].value}\n
+=======
+        Extra Payment: ${form["Exra Payment"].value}\n
+>>>>>>> 95c260b99f4bebea947681a72ca378defc5ad1be
         Total (LKR): ${form.totalLKR.value}\n
         Remarks for Car: ${form.remarksCar.value}\n
         Remarks for User: ${form.remarksUser.value}
@@ -83,6 +113,7 @@ function init() {
     populateCarBookingDropdown();
 
     // Attach event listener for form submission
+<<<<<<< HEAD
     // const carReturnForm = document.getElementById('car-return-form');
     // carReturnForm.addEventListener('submit', handleFormSubmit);
 }
@@ -115,5 +146,11 @@ window.addEventListener("click", (event) => {
 
 
 
+=======
+    const carReturnForm = document.getElementById('car-return-form');
+    carReturnForm.addEventListener('submit', handleFormSubmit);
+}
+
+>>>>>>> 95c260b99f4bebea947681a72ca378defc5ad1be
 // Call the init function when the page loads
 document.addEventListener('DOMContentLoaded', init);
