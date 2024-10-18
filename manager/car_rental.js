@@ -3,7 +3,7 @@ function initializeRentalHistory() {
         {
             id: 1,
             customerId: 'C001',
-            dvdId: 'D101',
+            carId: 'C101',
             rentDate: '2024-09-25',
             dueDate: '2024-10-02',
             returnDate: null,
@@ -13,7 +13,7 @@ function initializeRentalHistory() {
         {
             id: 2,
             customerId: 'C002',
-            dvdId: 'D102',
+            carId: 'C102',
             rentDate: '2024-09-20',
             dueDate: '2024-09-27',
             returnDate: '2024-09-28',
@@ -44,9 +44,9 @@ function fetchRentalHistory() {
         customerIdCell.textContent = record.customerId;
         row.appendChild(customerIdCell);
 
-        const dvdIdCell = document.createElement('td');
-        dvdIdCell.textContent = record.dvdId;
-        row.appendChild(dvdIdCell);
+        const carIdCell = document.createElement('td');
+        carIdCell.textContent = record.carId; // Changed from dvdId to carId
+        row.appendChild(carIdCell);
 
         const rentDateCell = document.createElement('td');
         rentDateCell.textContent = new Date(record.rentDate).toLocaleDateString();

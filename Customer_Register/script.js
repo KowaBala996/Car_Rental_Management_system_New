@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const carId = getQueryParam('carid');
 
     function Encryption(password) {
-        return btoa(password);
+        return btoa(password); // Basic Base64 encryption
     }
 
     function getQueryParam(param) {
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.getElementById('registerForm').addEventListener('submit', function (event) {
-        event.preventDefault();  
+        event.preventDefault(); // Prevent the form from submitting traditionally
 
         const name = document.getElementById('name').value.trim();
         const phone = document.getElementById('phone').value.trim();
@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
         validatemessage.innerHTML = '';
         validatemessage.style.cssText = "font-size: 16px; width: 70%; text-align: center; background-color: lightblue;";
 
+        // Validation
         if (!name) {
             validatemessage.innerHTML = 'Please enter your name.';
             return;
@@ -93,7 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Create the customer object
         const customer = { 
             id: uniqueId,
-            carId, 
             name, 
             phone, 
             email, 
@@ -109,9 +109,15 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(customer)
         })
-        .then(response => response.json())
+        .then(response => {
+            // Check if the response is OK (status 200-299)
+            if (!response.ok) {
+                throw new Error('Network response was not OK');
+            }
+            return response.json(); // Parse the JSON response
+        })
         .then(data => {
-            console.log(data)
+            console.log(data); // Log the response for debugging
             if (data.success) {
                 validatemessage.innerHTML = "Registered successfully!";
                 if (carId != null) {
@@ -120,14 +126,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     window.location.href = `../Customer_login/login.html`;
                 }
             } else {
+                // Handle cases where registration fails
                 validatemessage.innerHTML = data.message || 'Registration failed!';
             }
         })
         .catch(error => {
-            validatemessage.innerHTML = 'An error occurred during registration. Please try again.';
+            // Handle network or other errors
+            validatemessage.innerHTML = `An error occurred: ${error.message}`;
             console.error('Error:', error);
         });
 
-        this.reset();
+        this.reset(); // Reset the form after submission
     });
 });
