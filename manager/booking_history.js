@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to load booking history from the server
     async function loadBookingHistory() {
         try {
-            const response = await fetch('http://localhost:5255/api/Booking'); 
+            const response = await fetch('https://localhost:7175/api/Booking'); 
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     row.innerHTML = `
                         <td>${rentalCarDetail.bookingId || 'N/A'}</td>
                         <td>${rentalCarDetail.customerId || 'N/A'}</td>
-                        <td>${rentalCarDetail.rentalCarId || 'N/A'}</td>
+                        <td>${rentalCarDetail.carId || 'N/A'}</td>
                         <td>${new Date().toLocaleDateString() || 'N/A'}</td>
                         <td>${rentalCarDetail.availableFrom || 'N/A'}</td>
                         <td>${rentalCarDetail.availableTo || 'N/A'}</td>
