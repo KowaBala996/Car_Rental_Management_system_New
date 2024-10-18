@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const profileForm = document.getElementById("profile-form");
     const licenseFrontInput = document.getElementById("license-front");
-    const licenseBackInput = document.getElementById("license-back");
     const licenseFrontPreview = document.getElementById("licenseFrontPreview");
-    const licenseBackPreview = document.getElementById("licenseBackPreview");
     const notificationDiv = document.querySelector(".notification");
 
     const carid = getQueryParam('carid');
@@ -15,20 +13,27 @@ document.addEventListener("DOMContentLoaded", function () {
         previewImage(licenseFrontInput, licenseFrontPreview);
     });
 
-    licenseBackInput.addEventListener("change", function () {
-        previewImage(licenseBackInput, licenseBackPreview);
-    });
-
     profileForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        // Validate all fields before saving the data
+        // Validate form before submission
         if (!validateCustomerDetails() || !validateLicenseNumber()) {
-            return; // Stop form submission if any validation fails
+            return;
         }
 
-        saveProfileData();
-        showNotification("Profile updated successfully!");
+        const profileData = {
+            id: customerid || generateUniqueId(),
+            name: document.getElementById("name").value,
+            phone: document.getElementById("phone").value,
+            email: document.getElementById("email").value,
+            nic: document.getElementById("customerNicnumber").value,
+            address: document.getElementById("address").value,
+            postalCode: document.getElementById("postal-code").value,
+            drivingLicenseNumber: document.getElementById("license-number").value,
+            proofNumber: document.getElementById("proof-number").value
+        };
+
+        saveProfileData(profileData);
     });
 
     function previewImage(inputElement, previewElement) {
@@ -52,37 +57,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const address = document.getElementById("address").value.trim();
         const postalCode = document.getElementById("postal-code").value.trim();
 
-        if (!name) {
-            showNotification("Name is required!");
-            return false;
-        }
-        if (!email) {
-            showNotification("Email is required!");
-            return false;
-        }
-        if (!phone) {
-            showNotification("Phone number is required!");
-            return false;
-        }
-        if (!address) {
-            showNotification("Address is required!");
-            return false;
-        }
-        if (!postalCode) {
-            showNotification("Postal Code is required!");
+        if (!name || !email || !phone || !address || !postalCode) {
+            showNotification("All fields are required!");
             return false;
         }
 
-        // You can add further email/phone validation here if necessary
-
-        return true; // All validations passed
+        return true;
     }
 
     function validateLicenseNumber() {
         const licenseNumber = document.getElementById("license-number").value.trim();
-
-        // Regex to match Sri Lankan Driving License Number format
-        const licenseNumberPattern = /^[A-Z]\d{7,9}$/; // Adjusted to match the format
+        const licenseNumberPattern = /^[A-Z]\d{7,9}$/;
 
         if (!licenseNumberPattern.test(licenseNumber)) {
             showNotification("Invalid Driving License Number format!");
@@ -91,126 +76,74 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
-    function saveProfileData() {
-        const profileStatus = (licenseFrontInput.files[0] && licenseBackInput.files[0]) ? "Pending" : "Documents upload pending";
-        let userData = JSON.parse(localStorage.getItem('userProfileData')) || [];
-        const selectedCustomer = userData.find(customer => customer.customerId == customerid);
+    function saveProfileData(profileData) {
+        const formData = new FormData();
+        formData.append("profileData", JSON.stringify(profileData));
 
-        const profileData = {
-            customerId: customerid || generateUniqueId(),
-            customerName: selectedCustomer ? selectedCustomer.customerName : "",
-            customerEmail: selectedCustomer ? selectedCustomer.customerEmail : "",
-            customerPhone: selectedCustomer ? selectedCustomer.customerPhone : "",
-            customerNicnumber: selectedCustomer ? selectedCustomer.customerNicnumber : "",
-            password: selectedCustomer ? selectedCustomer.password : "",
-
-
-            customerAddress: document.getElementById("address").value || "",
-            postalCode: document.getElementById("postal-code").value || "",
-            licenseNumber: document.getElementById("license-number").value || "",
-            proofType: document.getElementById("proof-type").value || "",
-            proofNumber: document.getElementById("proof-number").value || "",
-            profileStatus: profileStatus
-        };
-
-        console.log("Profile Data to be saved:", profileData);
-
-        const existingProfileIndex = userData.findIndex(profile => profile.customerId === customerid);
-        if (existingProfileIndex !== -1) {
-            userData[existingProfileIndex] = profileData;  // Update existing profile
-        } else {
-            userData.push(profileData);  // Add new profile
+        if (licenseFrontInput.files[0]) {
+            formData.append("licenseFront", licenseFrontInput.files[0]);
         }
 
-        console.log("Updated user data before saving:", userData);
-
-        try {
-            localStorage.setItem("userProfileData", JSON.stringify(userData));
-
-            if (licenseFrontInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    localStorage.setItem("licenseFrontImage", e.target.result);
-                };
-                reader.readAsDataURL(licenseFrontInput.files[0]);
+        fetch('https://localhost:7175/api/Customer/Add-Customer', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Profile saved:", data);
+            if (data.success) {
+                showNotification("Profile updated successfully!");
+            } else {
+                showNotification("Error updating profile.");
             }
-
-            if (licenseBackInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    localStorage.setItem("licenseBackImage", e.target.result);
-                };
-                reader.readAsDataURL(licenseBackInput.files[0]);
-            }
-
-        } catch (error) {
+        })
+        .catch(error => {
+            console.error("Error:", error);
             showNotification("Error saving profile data!");
-            console.error("Error saving to localStorage", error);
-        }
+        });
     }
 
     function loadProfileData() {
-        const storedProfileData = JSON.parse(localStorage.getItem("userProfileData")) || [];
-        console.log("Stored Profile Data:", storedProfileData);
-
-        if (storedProfileData.length > 0) {
-            const currentProfile = storedProfileData.find(profile => profile.customerId === customerid);
-            console.log("Current Profile:", currentProfile);
-
-            if (currentProfile) {
-                document.getElementById("name").value = currentProfile.customerName || "";
-                document.getElementById("email").value = currentProfile.customerEmail || "";
-                document.getElementById("phone").value = currentProfile.customerPhone || "";
-                document.getElementById("address").value = currentProfile.customerAddress || "";
-                document.getElementById("customerNicnumber").value = currentProfile.customerNicnumber || "";
-
-                document.getElementById("postal-code").value = currentProfile.postalCode || "";
-                document.getElementById("license-number").value = currentProfile.licenseNumber || "";
-                document.getElementById("proof-type").value = currentProfile.proofType || "";
-                document.getElementById("proof-number").value = currentProfile.proofNumber || "";
+        fetch(`https://localhost:7175/api/Customer/Get-Customer-By-Nic/${customerid}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                document.getElementById("name").value = data.name || "";
+                document.getElementById("email").value = data.email || "";
+                document.getElementById("phone").value = data.phone || "";
+                document.getElementById("address").value = data.address || "";
+                document.getElementById("postal-code").value = data.postalCode || "";
+                document.getElementById("license-number").value = data.drivingLicenseNumber || "";
+                document.getElementById("proof-type").value = data.proofType || "";
+                document.getElementById("proof-number").value = data.proofIdNumber || ""; 
 
                 const verificationStatusSpan = document.querySelector(".verification-status .status");
-                verificationStatusSpan.textContent = currentProfile.profileStatus || "Pending";
+                verificationStatusSpan.textContent = data.profileStatus || "Pending";
 
-                // Set fields as read-only
-                document.getElementById("name").readOnly = true;
-                document.getElementById("email").readOnly = true;
-                document.getElementById("phone").readOnly = true;
-                document.getElementById("customerNicnumber").readOnly = true;
-                
+                // Load and show the uploaded license image
+                if (data.licenseFrontImage) {
+                    licenseFrontPreview.src = data.licenseFrontImage;
+                    licenseFrontPreview.style.display = "block";
+                }
 
-
-                if (currentProfile.profileStatus === "Verified") {
-                    if(carid){
+                // Redirect based on verification status
+                if (data.profileStatus === "Verified") {
+                    if (carid) {
                         window.location.href = `../Verified_Customer/Verified_Customer.html?carid=${carid}&customerid=${customerid}`;
-
-                    }else{
+                    } else {
                         window.location.href = `../Car_Categories/get-car.html?customerid=${customerid}`;
-
                     }
                 }
-            } else {
-                console.log("No matching profile found for this customer.");
             }
-        }
-
-        const storedLicenseFrontImage = localStorage.getItem("licenseFrontImage");
-        if (storedLicenseFrontImage) {
-            licenseFrontPreview.src = storedLicenseFrontImage;
-            licenseFrontPreview.style.display = "block";
-        }
-
-        const storedLicenseBackImage = localStorage.getItem("licenseBackImage");
-        if (storedLicenseBackImage) {
-            licenseBackPreview.src = storedLicenseBackImage;
-            licenseBackPreview.style.display = "block";
-        }
+        })
+        .catch(error => {
+            console.error("Error loading profile data:", error);
+        });
     }
 
     function showNotification(message) {
         notificationDiv.textContent = message;
         notificationDiv.style.display = "block";
-
         setTimeout(() => {
             notificationDiv.style.display = "none";
         }, 5000);
@@ -227,21 +160,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function generateUniqueId() {
-        return 'id-' + Math.random().toString(36).substr(2, 16);
+        return 'id-' + Math.random().toString(36).substr(2, 9);
     }
-    document.addEventListener("DOMContentLoaded", function () {
-        const logoutButton = document.getElementById('logoutButton');
-    
-        // Logout function to clear loggedUser from localStorage and redirect
-        logoutButton.addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent the default anchor behavior
-    
-            // Remove loggedUser from localStorage
-            localStorage.removeItem('loggedUser');
-    
-            // Redirect to the login page after logout
-            window.location.href = '../Customer_login/login.html';
-        });
-    });
-    
+
+    function ProfilePicLoading(nic) {
+        // Assuming 'students' is an array of student objects available in the scope
+        const student = students.find(s => s.nic === nic);
+        if (student) {
+            const imagePath = student.imagePath;
+            const imageFullPath = `http://localhost:5251${imagePath}`.trim();
+
+            const profilePicContainer = document.getElementById('profilepic-container');
+            profilePicContainer.innerHTML = 
+                `<img src="${imageFullPath}" alt="${student.fullName}" id="profile-picture" class="profile-picture">`;
+        }
+    }
 });

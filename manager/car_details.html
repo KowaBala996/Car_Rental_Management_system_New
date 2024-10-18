@@ -27,6 +27,8 @@
         <h2>Manage Services</h2>
         <ul>
             <li><a href="car_details.html" class="active">Car Details</a></li>
+            <li><a href="/manager/car-return.html">Return</a></li>
+
            
         </ul>
     </div>
@@ -96,8 +98,8 @@
             <label for="price">Price/hr:</label>
             <input type="number" id="price" name="price" step="0.01" min="0" required />
             
-            <label for="image">Image URL:</label>
-            <input type="text" id="image" name="image" required />
+            <label for="image">Car Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required />
             
             <label for="availableFrom">Available From:</label>
             <input type="date" id="availableFrom" name="availableFrom" required />

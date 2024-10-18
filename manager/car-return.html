@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Car Return Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="car_return.css">
-
 </head>
 
 <body>
@@ -17,7 +16,6 @@
                 <img src="../asset/downloadlogo.png" alt="logo" class="sidebar-logo">
             </div>
         </h2>
-
         <ul>
             <li><a href="dashboard.html">Dashboard</a></li>
         </ul>
@@ -26,69 +24,70 @@
             <li><a href="booking.html">Booking</a></li>
             <li><a href="booking_history.html">Rental History</a></li>
             <li><a href="verify_users.html">Verify Users</a></li>
-          
         </ul>
         <h2>Manage Services</h2>
         <ul>
-            <li><a href="car_details.html" class="active">Car Details</a></li>
+            <li><a href="car_details.html">Car Details</a></li>
+
+            <li><a href="car_details.html" class="active">Return</a></li>
         </ul>
     </div>
 
     <main class="content">
         <header class="content-header">
-            <!-- Optional header content can go here -->
+            <h1>Car Return</h1>
+            <div class="search-container">
+                <button id="openModalBtn" class="add-car">Open Modal</button>
+            </div>
         </header>
 
-        <div class="container">
-            <form id="car-return-form">
-                <h2><ion-icon name="calculator-outline"></ion-icon> Car Return</h2>
+        <table class="car-table">
+            <thead>
+                <tr>
+                    <th>Rental Car ID</th>
+                    <th>Start Date</th>
+                    <th>Return Date</th>
+                    <th>Extra Payment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically inserted here -->
+            </tbody>
+        </table>
 
-                <label for="carBookNumber">Car Booking Number</label>
-                <select id="carBookNumber" name="carBookNumber" required>
-                    <option value="">Select Car</option>
-                </select>
+        <!-- Modal -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModalBtn">&times;</span>
+                <div class="container">
+                    <form id="booking-form">
+                        <h2><ion-icon name="calculator-outline"></ion-icon> Car Return</h2>
+                        
+                        <!-- Car Rental ID -->
+                        <label for="rentalCarId">Car Rental ID</label>
+                        <select id="rentalCarId" name="rentalCarId" required>
+                        </select>
 
-                <label for="userNIC">User NIC/Passport No</label>
-                <input type="text" id="userNIC" name="userNIC" required>
+                        <!-- Start Date -->
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" name="startDate" required>
 
-                <label for="startDate">Start Date</label>
-                <input type="date" id="startDate" name="startDate" required>
+                        <!-- Return Date -->
+                        <label for="returnDate">Return Date</label>
+                        <input type="date" id="returnDate" name="returnDate" required>
 
-                <label for="returnDate">Return Date</label>
-                <input type="date" id="returnDate" name="returnDate" required>
+                        <!-- Extra Payment -->
+                        <label for="extraPayment">Extra Payment</label>
+                        <input type="number" id="extraPayment" name="extraPayment" required>
 
-                <label for="Exra Payment">Exra Payment</label>
-                <input type="number" id="Exra Payment" name="Exra Payment" required>
-
-                
-                <div class="checkbox-group">
-                    <label><input type="checkbox" name="noDamage" value="No Damage"> No Damage</label>
-                    <label><input type="checkbox" name="noAccident" value="No Accident"> No Accident</label>
-                    <label><input type="checkbox" name="noDrunkDrive" value="No Drunk & Drive or Over Speed"> No Drunk &
-                        Drive or Over Speed</label>
-                    <label><input type="checkbox" name="noPoliceCase" value="No Police Case or Crime Activity"> No
-                        Police Case or Crime Activity</label>
-                    
+                        <div class="buttons">
+                            <button type="reset" class="btn">Reset</button>
+                            <button type="submit" class="btn">Submit</button>
+                            <button type="button" class="btn" onclick="printReceipt()">Print Receipt</button>
+                        </div>
+                    </form>
                 </div>
-
-                <label for="remarksCar">Remarks for Car</label>
-                <textarea id="remarksCar" name="remarksCar"></textarea>
-
-                <label for="remarksUser">Remarks for User</label>
-                <textarea id="remarksUser" name="remarksUser"></textarea>
-
-                <div class="total-cost">
-                    <label for="totalLKR">Total (LKR)</label>
-                    <input type="number" id="totalLKR" name="totalLKR" readonly>
-                </div>
-
-                <div class="buttons">
-                    <button type="button" class="btn" onclick="calculateTotal()">Calculate Total</button>
-                    <button type="reset" class="btn">Reset</button>
-                    <button type="submit" class="btn">Submit</button>
-                    <button type="button" class="btn" onclick="printReceipt()">Print Receipt</button>
-                </div>
-            </form>
+            </div>
         </div>
     </main>
 
@@ -97,6 +96,8 @@
     </footer>
 
     <script src="car_return.js"></script>
+
 </body>
 
 </html>
+

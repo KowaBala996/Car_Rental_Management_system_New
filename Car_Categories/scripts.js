@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
             fuel: car.fuel,
             seats: car.seats,
             hourlyRate: car.price, 
-            bookingStartDate: startDateTime.toISOString().slice(0, -5), // Format to omit seconds
-            bookingEndDate: endDateTime.toISOString().slice(0, -5), // Format to omit seconds
+            bookingStartDate: startDateTime.toISOString().slice(0, -5), 
+            bookingEndDate: endDateTime.toISOString().slice(0, -5), 
             totalHours: totalHours.toFixed(2),
             totalPrice: totalPrice.toFixed(2)
         };

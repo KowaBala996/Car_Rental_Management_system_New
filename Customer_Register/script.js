@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     const carId = getQueryParam('carid');
-    
-    const registerCustomer = JSON.parse(localStorage.getItem('userProfileData')) || [];
 
     function Encryption(password) {
         return btoa(password);
@@ -47,10 +45,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('registerForm').addEventListener('submit', function (event) {
         event.preventDefault();  
 
-        const customerName = document.getElementById('name').value.trim();
-        const customerPhone = document.getElementById('phone').value.trim();
-        const customerEmail = document.getElementById('email').value.trim().toLowerCase(); 
-        const customerNicnumber = document.getElementById('nic').value.trim().toUpperCase();     
+        const name = document.getElementById('name').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const email = document.getElementById('email').value.trim().toLowerCase(); 
+        const nic = document.getElementById('nic').value.trim().toUpperCase();     
         const password = document.getElementById('password').value.trim();
         const confirmPassword = document.getElementById('confirmpassword').value.trim();
         const validatemessage = document.getElementById("Message");
@@ -58,22 +56,22 @@ document.addEventListener("DOMContentLoaded", function () {
         validatemessage.innerHTML = '';
         validatemessage.style.cssText = "font-size: 16px; width: 70%; text-align: center; background-color: lightblue;";
 
-        if (!customerName) {
+        if (!name) {
             validatemessage.innerHTML = 'Please enter your name.';
             return;
         }
 
-        if (!customerPhone || !/^(?:\+94|0)\d{9}$/.test(customerPhone)) {
+        if (!phone || !/^(?:\+94|0)\d{9}$/.test(phone)) {
             validatemessage.innerHTML = 'Please enter a valid phone number in the format +94 123456789.';
             return;
         }
 
-        if (!customerEmail || !/\S+@\S+\.\S+/.test(customerEmail)) {
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
             validatemessage.innerHTML = 'Please enter a valid email address.';
             return;
         }
 
-        if (!customerNicnumber || !/^\d{9}[vVxX]$|^\d{12}$/.test(customerNicnumber)) {
+        if (!nic || !/^\d{9}[vVxX]$|^\d{12}$/.test(nic)) {
             validatemessage.innerHTML = 'Please enter a valid NIC number (either 9 digits followed by V/v/X/x or 12 digits).';
             return;
         }
@@ -89,41 +87,46 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const isEmailDuplicate = registerCustomer.some(customer => customer.customerEmail === customerEmail);
-        const isNicDuplicate = registerCustomer.some(customer => customer.customerNicnumber === customerNicnumber);
-        const isPhoneDuplicate = registerCustomer.some(customer => customer.customerPhone === customerPhone);
-
-        if (isEmailDuplicate) {
-            validatemessage.innerHTML = 'The email is already registered.';
-            return;
-        }
-
-        if (isNicDuplicate) {
-            validatemessage.innerHTML = 'The NIC is already registered.';
-            return;
-        }
-
-        if (isPhoneDuplicate) {
-            validatemessage.innerHTML = 'The phone number is already registered.';
-            return;
-        }
-
         const encryptedPassword = Encryption(password);
-
         const uniqueId = generateUniqueId();
 
-        const customer = { customerId: uniqueId, customerName, customerPhone, customerEmail, customerNicnumber, password: encryptedPassword, carId };
+        // Create the customer object
+        const customer = { 
+            id: uniqueId,
+            carId, 
+            name, 
+            phone, 
+            email, 
+            nic, 
+            password: encryptedPassword, 
+        };
 
-        registerCustomer.push(customer);
-        localStorage.setItem("userProfileData", JSON.stringify(registerCustomer));
-
-        validatemessage.innerHTML = "Registered successfully!";
-
-        if (carId != null) {
-            window.location.href = `../Customer_login/login.html?carid=${carId}`;
-        } else {
-            window.location.href = `../Customer_login/login.html`;
-        }
+        // Fetch API call to submit the customer data to the server
+        fetch('https://localhost:7175/api/Customer/Add-Customer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(customer)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            if (data.success) {
+                validatemessage.innerHTML = "Registered successfully!";
+                if (carId != null) {
+                    window.location.href = `../Customer_login/login.html?carid=${carId}`;
+                } else {
+                    window.location.href = `../Customer_login/login.html`;
+                }
+            } else {
+                validatemessage.innerHTML = data.message || 'Registration failed!';
+            }
+        })
+        .catch(error => {
+            validatemessage.innerHTML = 'An error occurred during registration. Please try again.';
+            console.error('Error:', error);
+        });
 
         this.reset();
     });

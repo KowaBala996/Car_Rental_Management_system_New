@@ -1,373 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const initialCars = [
-        {
-            id: 'Car_01',
-            brand: 'Nissan',
-            bodyType: 'Coupe',
-            model: 'GT-R',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 4,
-            price: 300,
-            image: 'NissanGT-R.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-15'
-        },
-        {
-            id: 'Car_02',
-            brand: 'Lamborghini',
-            bodyType: 'Coupe',
-            model: 'Revuelto',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 3,
-            price: 650,
-            image: 'LamborghiniRevuelto.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-22'
-        },
-        {
-            id: 'Car_03',
-            brand: 'Toyota',
-            bodyType: 'Coupe',
-            model: 'GR Supra',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 5,
-            price: 200,
-            image: 'car1.png',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-20'
-        },
-        {
-            id: 'Car_04',
-            brand: 'Lamborghini',
-            bodyType: 'Coupe',
-            model: 'Revuelto',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 3,
-            price: 650,
-            image: 'LamborghiniRevuelto.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-22'
-        },
-        {
-            id: 'Car_05',
-            brand: 'Toyota',
-            bodyType: 'Coupe',
-            model: 'Corolla',
-            transmission: 'Manual',
-            fuel: 'Petrol',
-            seats: 5,
-            price: 200,
-            image: 'ToyotaCorolla.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-10'
-        },
-        {
-            id: 'Car_06',
-            brand: 'Nissan',
-            bodyType: 'Coupe',
-            model: 'Altima',
-            transmission: 'Automatic',
-            fuel: 'Diesel',
-            seats: 5,
-            price: 300,
-            image: 'NissanAltima.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-28'
-        },
-        {
-            id: 'Car_07',
-            brand: 'Lamborghini',
-            bodyType: 'Coupe',
-            model: 'Aventador',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 2,
-            price: 700,
-            image: 'LamborghiniAventador.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-23'
-        },
-        {
-            id: 'Car_08',
-            brand: 'Toyota',
-            bodyType: 'Coupe',
-            model: 'Camry',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 5,
-            price: 200,
-            image: 'ToyotaCamry.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-13'
-        },
-        {
-            id: 'Car_09',
-            brand: 'Nissan',
-            bodyType: 'Coupe',
-            model: '370Z',
-            transmission: 'Manual',
-            fuel: 'Petrol',
-            seats: 2,
-            price: 300,
-            image: 'Nissan370Z.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-17'
-        },
-        {
-            id: 'Car_10',
-            brand: 'Lamborghini',
-            bodyType: 'SUV',
-            model: 'Huracan',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 2,
-            price: 700,
-            image: 'LamborghiniHuracan.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-30'
-        },
-        {
-            id: 'Car_11',
-            brand: 'Toyota',
-            bodyType: 'SUV',
-            model: 'GR Supra',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 5,
-            price: 200,
-            image: 'ToyotaGR Supra.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-20'
-        },
-        {
-            id: 'Car_12',
-            brand: 'Nissan',
-            bodyType: 'SUV',
-            model: 'GT-R',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 4,
-            price: 300,
-            image: 'NissanGT-R.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-15'
-        },
-        {
-            id: 'Car_13',
-            brand: 'Audi',
-            bodyType: 'SUV',
-            model: 'A8',
-            transmission: 'Automatic',
-            fuel: 'Diesel',
-            seats: 5,
-            price: 200,
-            image: 'AudiA8.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-10'
-        },
-        {
-            id: 'Car_14',
-            brand: 'Audi',
-            bodyType: 'SUV',
-            model: 'Sedans',
-            transmission: 'Automatic',
-            fuel: 'Diesel',
-            seats: 4,
-            price: 400,
-            image: 'AudiSedans.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-10'
-        },
-        {
-            id: 'Car_15',
-            brand: 'BMW',
-            bodyType: 'SUV',
-            model: 'X5',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 5,
-            price: 400,
-            image: 'BMWX5.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-25'
-        },
-        {
-            id: 'Car_16',
-            brand: 'Mercedes-Benz',
-            bodyType: 'SUV',
-            model: 'S-Class',
-            transmission: 'Automatic',
-            fuel: 'Diesel',
-            seats: 5,
-            price: 500,
-            image: 'Mercedes-BenzS-CLASS.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-18'
-        },
-        {
-            id: 'Car_17',
-            brand: 'Tesla',
-            bodyType: 'SUV',
-            model: 'Model S',
-            transmission: 'Automatic',
-            fuel: 'Electric',
-            seats: 5,
-            price: 300,
-            image: 'TeslaModel S.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-30'
-        },
-        {
-            id: 'Car_18',
-            brand: 'Ford',
-            bodyType: 'SUV',
-            model: 'Mustang',
-            transmission: 'Manual',
-            fuel: 'Petrol',
-            seats: 4,
-            price: 300,
-            image: 'FordMustang.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-15'
-        },
-        {
-            id: 'Car_19',
-            brand: 'Toyota',
-            bodyType: 'SUV',
-            model: 'GR Supra',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 5,
-            price: 200,
-            image: 'ToyotaGR Supra.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-20'
-        },
-        {
-            id: 'Car_20',
-            brand: 'Nissan',
-            bodyType: 'Sedan',
-            model: 'GT-R',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 4,
-            price: 300,
-            image: 'NissanGT-R.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-15'
-        },
-        {
-            id: 'Car_21',
-            brand: 'Lamborghini',
-            bodyType: 'Sedan',
-            model: 'Revuelto',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 3,
-            price: 650,
-            image: 'LamborghiniRevuelto.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-22'
-        },
-        {
-            id: 'Car_22',
-            brand: 'Audi',
-            bodyType: 'Sedan',
-            model: 'A8',
-            transmission: 'Automatic',
-            fuel: 'Diesel',
-            seats: 5,
-            price: 300,
-            image: 'AudiA8.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-10'
-        },
-        {
-            id: 'Car_23',
-            brand: 'BMW',
-            bodyType: 'Sedan',
-            model: 'X5',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 5,
-            price: 500,
-            image: 'BMWX5.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-30'
-        },
-        {
-            id: 'Car_24',
-            brand: 'Mercedes-Benz',
-            bodyType: 'Sedan',
-            model: 'S-Class',
-            transmission: 'Automatic',
-            fuel: 'Diesel',
-            seats: 5,
-            price: 600,
-            image: 'Mercedes-BenzS-CLASS.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-20'
-        },  {
-            id: 'Car_25',
-            brand: 'Ferrari',
-            bodyType: 'Sedan',
-            model: 'Portofino',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 2,
-            price: 700,
-            image: 'FerrariPortofino.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-25'
-        },
-        {
-            id: 'Car_26',
-            brand: 'Tesla',
-            bodyType: 'Sedan',
-            model: 'Model S',
-            transmission: 'Automatic',
-            fuel: 'Electric',
-            seats: 5,
-            price: 400,
-            image: 'TeslaModel S.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-30'
-        },
-        {
-            id: 'Car_27',
-            brand: 'Rolls-Royce',
-            bodyType: 'Sedan',
-            model: 'Phantom',
-            transmission: 'Automatic',
-            fuel: 'Petrol',
-            seats: 5,
-            price: 1200,
-            image: 'Rolls-RoycePhantom.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-20'
-        },
-        {
-            id: 'Car_28',
-            brand: 'Jaguar',
-            bodyType: 'Sedan',
-            model: 'XF',
-            transmission: 'Automatic',
-            fuel: 'Diesel',
-            seats: 5,
-            price: 600,
-            image:'JaguarXF.jpeg',
-            availableFrom: '2024-09-23',
-            availableTo: '2024-10-28'
-        }
-    ];
-    
-       
-
-    
     const carTableBody = document.querySelector(".car-table tbody");
     const carForm = document.getElementById("carForm");
     const modal = document.getElementById("modal");
@@ -375,12 +6,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const addCarBtn = document.querySelector(".add-car");
     const searchInput = document.getElementById("searchInput");
 
-    let cars = JSON.parse(localStorage.getItem("cars")) || initialCars;
+    let cars = [];
     let editingIndex = -1;
 
-    // Save initial cars to localStorage if not already saved
-    if (!localStorage.getItem("cars")) {
-        localStorage.setItem("cars", JSON.stringify(initialCars));
+    // Function to fetch initial cars from the API
+    async function fetchCars() {
+        try {
+            const response = await fetch('https://yourapi.com/cars'); // Replace with your API endpoint
+            if (!response.ok) throw new Error('Network response was not ok');
+            cars = await response.json();
+            renderCars();
+        } catch (error) {
+            console.error('Failed to fetch cars:', error);
+        }
     }
 
     // Function to render cars
@@ -408,102 +46,163 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${car.availableFrom}</td>
                 <td>${car.availableTo}</td>
                 <td>
-                    <button class="edit-btn" onclick="editCar(${index})"><i class="fa fa-pencil"></i> Edit</button>
-                    <button class="delete-btn" onclick="deleteCar(${index})"><i class="fa fa-trash"></i> Delete</button>
+                    <button class="edit-btn" data-index="${index}">Edit</button>
+                    <button class="delete-btn" data-index="${index}">Delete</button>
                 </td>
             `;
             carTableBody.appendChild(row);
         });
     }
 
-    // Function to validate form inputs
-    function validateForm() {
-        const priceValue = parseFloat(carForm.price.value);
-        const seatsValue = parseInt(carForm.seats.value);
+    // Event listener for search input
+    searchInput.addEventListener("input", renderCars);
 
-        if (isNaN(priceValue) || isNaN(seatsValue) || priceValue <= 0 || seatsValue <= 0) {
-            alert("Please enter valid numerical values for price and seats.");
-            return false;
+    // Function to add a new car
+    async function addCar(carData) {
+        try {
+            const response = await fetch('https://localhost:7175/api/Manager/add-car', { // Replace with your API endpoint
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(carData)
+            });
+            if (!response.ok) throw new Error('Failed to add car');
+            const newCar = await response.json();
+            cars.push(newCar);
+            renderCars();
+        } catch (error) {
+            console.error('Error adding car:', error);
         }
-        return true;
     }
 
-    // Form submission handler
-    carForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        if (!validateForm()) return;
-
-        const newCar = {
-            id: `Car_${editingIndex >= 0 ? String(cars[editingIndex].id.split('_')[1]).padStart(2, '0') : String(cars.length + 1).padStart(2, '0')}`, // Assign id for new car
+    // Event listener for car form submission
+    carForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(carForm); // Create FormData object to handle file input
+        const carData = {
+            id: carForm.id.value,
             brand: carForm.brand.value,
             bodyType: carForm.bodyType.value,
             model: carForm.model.value,
             transmission: carForm.transmission.value,
-            fuel: carForm.fuelType.value,
+            fuel: carForm.fuel.value,
             seats: parseInt(carForm.seats.value),
             price: parseFloat(carForm.price.value),
-            image: carForm.image.value,
             availableFrom: carForm.availableFrom.value,
             availableTo: carForm.availableTo.value
         };
-        
-        
-        if (editingIndex >= 0) {
-            // Update existing car
-            cars[editingIndex] = newCar;
-            editingIndex = -1;
-        } else {
-            // Add new car
-            cars.push(newCar);
-        }
 
-        localStorage.setItem("cars", JSON.stringify(cars));
-        renderCars();
-        carForm.reset();
-        modal.style.display = "none"; // Hide the modal
+        // Handle image upload
+        const imageFile = formData.get("image");
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                carData.image = reader.result; // Set the image data to base64 format
+                if (editingIndex === -1) {
+                    await addCar(carData); // Add new car
+                } else {
+                    await updateCar(editingIndex, carData); // Update existing car
+                }
+                carForm.reset(); // Clear the form
+                modal.style.display = "none"; // Close the modal
+            };
+            reader.readAsDataURL(imageFile); // Read the file as a data URL
+        }
     });
 
-    // Edit car function
-    window.editCar = function(index) {
-        editingIndex = index;
-        const car = cars[index];
+    // Function to update a car
+    async function updateCar(index, carData) {
+        try {
+            const response = await fetch(`https://localhost:7175/api/Manager/update-car`, { // Replace with your API endpoint
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(carData)
+            });
+            if (!response.ok) throw new Error('Failed to update car');
+            cars[index] = { ...cars[index], ...carData };
+            renderCars();
+        } catch (error) {
+            console.error('Error updating car:', error);
+        }
+    }
+
+    // Function to delete a car
+    async function deleteCar(index) {
+        try {
+            const response = await fetch(`https://yourapi.com/cars/${cars[index].id}`, { // Replace with your API endpoint
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error('Failed to delete car');
+            cars.splice(index, 1);
+            renderCars();
+        } catch (error) {
+            console.error('Error deleting car:', error);
+        }
+    }
+
+    // Event delegation for edit and delete buttons
+    carTableBody.addEventListener("click", (e) => {
+        const index = e.target.dataset.index;
+        if (e.target.classList.contains("edit-btn")) {
+            editingIndex = index;
+            loadCarToForm(cars[index]);
+            modal.style.display = "block"; // Show modal for editing
+        } else if (e.target.classList.contains("delete-btn")) {
+            if (confirm("Are you sure you want to delete this car?")) {
+                deleteCar(index);
+            }
+        }
+    });
+
+    // Load car data into the form for editing
+    function loadCarToForm(car) {
         carForm.brand.value = car.brand;
         carForm.bodyType.value = car.bodyType;
         carForm.model.value = car.model;
         carForm.transmission.value = car.transmission;
-        carForm.fuelType.value = car.fuel;
+        carForm.fuel.value = car.fuel;
         carForm.seats.value = car.seats;
         carForm.price.value = car.price;
-        carForm.image.value = car.image;
+        carForm.image.value = ""; // Clear file input
         carForm.availableFrom.value = car.availableFrom;
         carForm.availableTo.value = car.availableTo;
+    }
 
-        modal.style.display = "block"; // Display the modal
-    };
-
-    // Delete car function
-    window.deleteCar = function(index) {
-        if (confirm("Are you sure you want to delete this car?")) {
-            cars.splice(index, 1);
-            localStorage.setItem("cars", JSON.stringify(cars));
-            renderCars();
-        }
-    };
-
-    // Close modal on click
-    closeBtn.addEventListener("click", () => {
-        modal.style.display = "none";
-        carForm.reset();
-    });
-
-    // Add car button to open modal
+    // Show modal when adding a new car
     addCarBtn.addEventListener("click", () => {
-        carForm.reset();
-        editingIndex = -1; // Reset the editing index
-        modal.style.display = "block";
+        modal.style.display = "block"; // Show modal for adding new car
+        editingIndex = -1; // Reset editing index
+        carForm.reset(); // Clear the form
     });
 
-    // Initial rendering of cars
-    renderCars();
+    // Close modal
+    closeBtn.addEventListener("click", () => {
+        modal.style.display = "none"; // Hide the modal
+    });
+
+    // Fetch cars on page load
+    fetchCars();
+    loadProfilePicture();
 });
 
+// Function to load the profile picture
+async function loadProfilePicture() {
+    const nic = 'your-nic-here'; // Replace with the actual NIC you want to load
+    try {
+        const response = await fetch(`https://yourapi.com/profile/${nic}`); // Replace with your API endpoint
+        if (!response.ok) throw new Error('Network response was not ok');
+        const profileData = await response.json();
+        
+        const profilePicContainer = document.getElementById('profilepic-container');
+        profilePicContainer.innerHTML = `
+            <h2>Profile Picture:</h2>
+            <img src="${profileData.imagePath}" alt="Profile Picture" style="width: 150px; height: auto;" />
+        `;
+    } catch (error) {
+        console.error('Failed to load profile picture:', error);
+    }
+}
